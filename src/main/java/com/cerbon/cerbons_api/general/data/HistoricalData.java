@@ -141,6 +141,10 @@ public class HistoricalData<T> implements List<T> {
         return history.get(clampedPast);
     }
 
+    public List<T> getAll() {
+        return new ArrayList<>(history);
+    }
+
     @Override
     public T set(int index, T element) {
         return history.set(index, element);
