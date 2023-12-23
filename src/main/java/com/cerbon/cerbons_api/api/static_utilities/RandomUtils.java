@@ -8,10 +8,14 @@ import java.util.function.Supplier;
 public class RandomUtils {
     private static final Random rand = new Random();
 
+    public static double randDouble() {
+        return rand.nextDouble();
+    }
+
     /**
      * Creates a random value between -range and range
      */
-    public static double randomDouble(double range) {
+    public static double randDouble(double range) {
         return (rand.nextDouble() - 0.5) * 2 * range;
     }
 
