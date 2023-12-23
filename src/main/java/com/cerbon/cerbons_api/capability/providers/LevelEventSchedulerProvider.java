@@ -14,7 +14,7 @@ public class LevelEventSchedulerProvider implements ICapabilityProvider {
     private EventScheduler eventScheduler;
     private final LazyOptional<EventScheduler> optional = LazyOptional.of(this::createEventScheduler);
 
-    private EventScheduler createEventScheduler(){
+    private EventScheduler createEventScheduler() {
         if (this.eventScheduler == null)
             this.eventScheduler = new EventScheduler();
 
