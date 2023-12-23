@@ -1,4 +1,4 @@
-package com.cerbon.cerbons_api.general.random;
+package com.cerbon.cerbons_api.api.general.random;
 
 import com.mojang.datafixers.util.Pair;
 

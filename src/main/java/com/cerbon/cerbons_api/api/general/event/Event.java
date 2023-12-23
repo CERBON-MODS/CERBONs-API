@@ -1,4 +1,4 @@
-package com.cerbon.cerbons_api.general.event;
+package com.cerbon.cerbons_api.api.general.event;
 
 import java.util.function.Supplier;
 

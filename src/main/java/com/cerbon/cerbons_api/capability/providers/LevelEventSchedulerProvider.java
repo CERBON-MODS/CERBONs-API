@@ -1,6 +1,6 @@
 package com.cerbon.cerbons_api.capability.providers;
 
-import com.cerbon.cerbons_api.general.event.EventScheduler;
+import com.cerbon.cerbons_api.api.general.event.EventScheduler;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;

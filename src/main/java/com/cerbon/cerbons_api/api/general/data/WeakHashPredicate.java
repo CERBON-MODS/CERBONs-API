@@ -1,4 +1,4 @@
-package com.cerbon.cerbons_api.general.data;
+package com.cerbon.cerbons_api.api.general.data;
 
 import java.util.WeakHashMap;
 import java.util.function.Predicate;

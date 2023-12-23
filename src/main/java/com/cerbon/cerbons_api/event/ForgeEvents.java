@@ -2,7 +2,7 @@ package com.cerbon.cerbons_api.event;
 
 import com.cerbon.cerbons_api.CerbonsApi;
 import com.cerbon.cerbons_api.capability.providers.LevelEventSchedulerProvider;
-import com.cerbon.cerbons_api.general.event.EventScheduler;
+import com.cerbon.cerbons_api.api.general.event.EventScheduler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AttachCapabilitiesEvent;

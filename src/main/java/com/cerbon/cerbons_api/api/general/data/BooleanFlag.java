@@ -1,4 +1,4 @@
-package com.cerbon.cerbons_api.general.data;
+package com.cerbon.cerbons_api.api.general.data;
 
 public class BooleanFlag {
     private boolean flag = false;
