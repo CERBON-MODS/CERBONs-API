@@ -21,12 +21,6 @@ public class HistoricalData<T> implements List<T> {
         this.history.add(initialValue);
     }
 
-    public HistoricalData(int maxHistory) {
-        if (maxHistory < 2) throw new IllegalArgumentException("Max History cannot be less than 2");
-        this.maxHistory = maxHistory;
-        this.history = new ArrayList<>();
-    }
-
     @Override
     public int size() {
         return history.size();
