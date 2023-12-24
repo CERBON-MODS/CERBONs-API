@@ -19,7 +19,7 @@ public class CerbonsApiCapabilities {
         return level.getCapability(LevelEventSchedulerProvider.EVENT_SCHEDULER).resolve().orElseThrow();
     }
 
-    public static List<Vec3> getPlayerPositions(ServerPlayer player){
+    public static List<Vec3> getLastPositions(ServerPlayer player) {
         return player.getCapability(PlayerMoveHistoryProvider.HISTORICAL_DATA)
                 .map(HistoricalData::getAll)
                 .orElse(Collections.emptyList());
