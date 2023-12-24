@@ -48,7 +48,8 @@ public class ForgeEvents {
             if (previousPosition.distanceToSqr(newPosition) > 5)
                 data.clear();
 
-            data.add(newPosition);
+            if (previousPosition != newPosition)
+                data.add(newPosition);
         });
 
         event.player.getCapability(BlockPosHistoryProvider.HISTORICAL_DATA).ifPresent(data -> {
