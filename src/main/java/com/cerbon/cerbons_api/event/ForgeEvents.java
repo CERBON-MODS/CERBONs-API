@@ -3,8 +3,8 @@ package com.cerbon.cerbons_api.event;
 import com.cerbon.cerbons_api.CerbonsApi;
 import com.cerbon.cerbons_api.capability.providers.LevelEventSchedulerProvider;
 import com.cerbon.cerbons_api.api.general.event.EventScheduler;
-import com.cerbon.cerbons_api.capability.providers.PlayerBlockPosHistoryProvider;
-import com.cerbon.cerbons_api.capability.providers.PlayerMoveHistoryProvider;
+import com.cerbon.cerbons_api.capability.providers.BlockPosHistoryProvider;
+import com.cerbon.cerbons_api.capability.providers.MoveHistoryProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -23,11 +23,11 @@ public class ForgeEvents {
     public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
         if (!(event.getObject() instanceof Player)) return;
 
-        if (!event.getObject().getCapability(PlayerMoveHistoryProvider.HISTORICAL_DATA).isPresent())
-            event.addCapability(new ResourceLocation(CerbonsApi.MOD_ID, "player_move_history"), new PlayerMoveHistoryProvider());
+        if (!event.getObject().getCapability(MoveHistoryProvider.HISTORICAL_DATA).isPresent())
+            event.addCapability(new ResourceLocation(CerbonsApi.MOD_ID, "player_move_history"), new MoveHistoryProvider());
 
-        if (!event.getObject().getCapability(PlayerBlockPosHistoryProvider.HISTORICAL_DATA).isPresent())
-            event.addCapability(new ResourceLocation(CerbonsApi.MOD_ID, "player_block_pos_history"), new PlayerBlockPosHistoryProvider());
+        if (!event.getObject().getCapability(BlockPosHistoryProvider.HISTORICAL_DATA).isPresent())
+            event.addCapability(new ResourceLocation(CerbonsApi.MOD_ID, "player_block_pos_history"), new BlockPosHistoryProvider());
     }
 
     @SubscribeEvent
@@ -40,7 +40,7 @@ public class ForgeEvents {
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side.isClient()) return;
 
-        event.player.getCapability(PlayerMoveHistoryProvider.HISTORICAL_DATA).ifPresent(data -> {
+        event.player.getCapability(MoveHistoryProvider.HISTORICAL_DATA).ifPresent(data -> {
             Vec3 previousPosition = data.get(0);
             Vec3 newPosition = event.player.position();
 
@@ -51,7 +51,7 @@ public class ForgeEvents {
             data.add(newPosition);
         });
 
-        event.player.getCapability(PlayerBlockPosHistoryProvider.HISTORICAL_DATA).ifPresent(data -> {
+        event.player.getCapability(BlockPosHistoryProvider.HISTORICAL_DATA).ifPresent(data -> {
             BlockPos previousPosition = data.get(0);
             BlockPos newPosition = event.player.blockPosition();
             Level level = event.player.level();
@@ -59,6 +59,8 @@ public class ForgeEvents {
 
             if (newPosition != previousPosition && isValidBlock)
                 data.add(newPosition);
+
+            System.out.println(data.getAll());
         });
     }
 

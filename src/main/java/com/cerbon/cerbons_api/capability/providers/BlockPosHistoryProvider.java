@@ -15,15 +15,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class PlayerBlockPosHistoryProvider implements ICapabilitySerializable<CompoundTag> {
-    public static final Capability<PlayerBlockPosHistory> HISTORICAL_DATA = CapabilityManager.get(new CapabilityToken<>() {});
+public class BlockPosHistoryProvider implements ICapabilitySerializable<CompoundTag> {
+    public static final Capability<BlockPosHistory> HISTORICAL_DATA = CapabilityManager.get(new CapabilityToken<>() {});
 
-    private PlayerBlockPosHistory positionalHistory;
-    private final LazyOptional<PlayerBlockPosHistory> optional = LazyOptional.of(this::createHistoricalData);
+    private BlockPosHistory positionalHistory;
+    private final LazyOptional<BlockPosHistory> optional = LazyOptional.of(this::createHistoricalData);
 
-    private PlayerBlockPosHistory createHistoricalData() {
+    private BlockPosHistory createHistoricalData() {
         if(this.positionalHistory == null)
-            this.positionalHistory = new PlayerBlockPosHistory(new BlockPos(0, 0, 0), 10);
+            this.positionalHistory = new BlockPosHistory(new BlockPos(0, 0, 0), 10);
 
         return this.positionalHistory;
     }
@@ -41,7 +41,7 @@ public class PlayerBlockPosHistoryProvider implements ICapabilitySerializable<Co
         if (!tag.contains("LastBlocksPos")) return;
         List<BlockPos> blocksPos = Arrays.stream(tag.getLongArray("LastBlocksPos")).mapToObj(BlockPos::of).toList();
 
-        this.positionalHistory = new PlayerBlockPosHistory(new BlockPos(0, 0, 0), 10);
+        this.positionalHistory = new BlockPosHistory(new BlockPos(0, 0, 0), 10);
         this.positionalHistory.remove(0);
         this.positionalHistory.addAll(blocksPos);
     }
@@ -51,9 +51,9 @@ public class PlayerBlockPosHistoryProvider implements ICapabilitySerializable<Co
         return HISTORICAL_DATA.orEmpty(cap, optional);
     }
 
-    public static class PlayerBlockPosHistory extends HistoricalData<BlockPos> {
+    public static class BlockPosHistory extends HistoricalData<BlockPos> {
 
-        public PlayerBlockPosHistory(BlockPos initialValue, int maxHistory) {
+        public BlockPosHistory(BlockPos initialValue, int maxHistory) {
             super(initialValue, maxHistory);
         }
     }
