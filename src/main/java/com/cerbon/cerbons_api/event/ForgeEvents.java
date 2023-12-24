@@ -55,7 +55,7 @@ public class ForgeEvents {
             BlockPos previousPosition = data.get(0);
             BlockPos newPosition = event.player.blockPosition();
             Level level = event.player.level();
-            boolean isValidBlock = level.getBlockState(newPosition.below()).isRedstoneConductor(level, newPosition.below());
+            boolean isValidBlock = level.getBlockState(newPosition.below()).isSolid();
 
             if (newPosition != previousPosition && isValidBlock)
                 data.add(newPosition);
