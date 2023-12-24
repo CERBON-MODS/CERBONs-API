@@ -59,8 +59,6 @@ public class ForgeEvents {
 
             if (newPosition != previousPosition && isValidBlock)
                 data.add(newPosition);
-
-            System.out.println(data.getAll());
         });
     }
 
