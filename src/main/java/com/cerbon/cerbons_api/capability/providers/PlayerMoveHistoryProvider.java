@@ -10,14 +10,14 @@ import org.jetbrains.annotations.Nullable;
 
 @AutoRegisterCapability
 public class PlayerMoveHistoryProvider implements ICapabilityProvider {
-    public static final Capability<HistoricalData<Vec3>> HISTORICAL_DATA = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<PlayerMoveHistory> HISTORICAL_DATA = CapabilityManager.get(new CapabilityToken<>() {});
 
-    private HistoricalData<Vec3> positionalHistory;
-    private final LazyOptional<HistoricalData<Vec3>> optional = LazyOptional.of(this::createHistoricalData);
+    private PlayerMoveHistory positionalHistory;
+    private final LazyOptional<PlayerMoveHistory> optional = LazyOptional.of(this::createHistoricalData);
 
-    private HistoricalData<Vec3> createHistoricalData() {
+    private PlayerMoveHistory createHistoricalData() {
         if(this.positionalHistory == null)
-            this.positionalHistory = new HistoricalData<>(Vec3.ZERO, 10);
+            this.positionalHistory = new PlayerMoveHistory(Vec3.ZERO, 10);
 
         return this.positionalHistory;
     }
@@ -25,5 +25,12 @@ public class PlayerMoveHistoryProvider implements ICapabilityProvider {
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         return HISTORICAL_DATA.orEmpty(cap, optional);
+    }
+
+    public static class PlayerMoveHistory extends HistoricalData<Vec3> {
+
+        public PlayerMoveHistory(Vec3 initialValue, int maxHistory) {
+            super(initialValue, maxHistory);
+        }
     }
 }
