@@ -1,8 +1,8 @@
 package com.cerbon.cerbons_api.capability.providers;
 
 import com.cerbon.cerbons_api.api.general.data.HistoricalData;
+import com.cerbon.cerbons_api.api.static_utilities.CapabilityUtils;
 import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
-import com.cerbon.cerbons_api.capability.CerbonsApiCapabilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -20,7 +20,7 @@ import java.util.List;
  * This class provides a capability for storing vec3 values.
  * To use this capability you need to attach it to your object.
  * <p>
- * See also: {@link AttachCapabilitiesEvent}, {@link CerbonsApiCapabilities}
+ * See also: {@link AttachCapabilitiesEvent}, {@link CapabilityUtils}
  */
 @AutoRegisterCapability
 public class Vec3HistoryProvider implements ICapabilitySerializable<CompoundTag> {
