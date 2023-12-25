@@ -27,7 +27,7 @@ public class ForgeEvents {
             event.addCapability(new ResourceLocation(CerbonsApi.MOD_ID, "player_move_history"), new Vec3HistoryProvider());
 
         if (!event.getObject().getCapability(BlockPosHistoryProvider.HISTORICAL_DATA).isPresent())
-            event.addCapability(new ResourceLocation(CerbonsApi.MOD_ID, "player_block_pos_history"), new BlockPosHistoryProvider());
+            event.addCapability(new ResourceLocation(CerbonsApi.MOD_ID, "player_block_pos_history"), new BlockPosHistoryProvider(5, false));
     }
 
     @SubscribeEvent
@@ -60,6 +60,8 @@ public class ForgeEvents {
 
             if (newPosition != previousPosition && isValidBlock)
                 data.add(newPosition);
+
+            System.out.println(data.getAll());
         });
     }
 

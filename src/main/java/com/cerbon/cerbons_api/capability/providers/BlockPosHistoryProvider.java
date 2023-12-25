@@ -22,14 +22,28 @@ import java.util.List;
  */
 @AutoRegisterCapability
 public class BlockPosHistoryProvider implements ICapabilitySerializable<CompoundTag> {
-    public static final Capability<BlockPosHistory> HISTORICAL_DATA = CapabilityManager.get(new CapabilityToken<>() {});
+    private final BlockPos initialValue;
+    private final int maxHistory;
+    private final boolean persistData;
 
     private BlockPosHistory positionalHistory;
     private final LazyOptional<BlockPosHistory> optional = LazyOptional.of(this::createHistoricalData);
 
+    public static final Capability<BlockPosHistory> HISTORICAL_DATA = CapabilityManager.get(new CapabilityToken<>() {});
+
+    public BlockPosHistoryProvider(BlockPos initialValue, int maxHistory, boolean persistData) {
+        this.initialValue = initialValue;
+        this.maxHistory = maxHistory;
+        this.persistData = persistData;
+    }
+
+    public BlockPosHistoryProvider(int maxHistory, boolean persistData) {
+        this(new BlockPos(0, 0, 0), maxHistory, persistData);
+    }
+
     private BlockPosHistory createHistoricalData() {
         if(this.positionalHistory == null)
-            this.positionalHistory = new BlockPosHistory(new BlockPos(0, 0, 0), 10);
+            this.positionalHistory = new BlockPosHistory(initialValue, maxHistory);
 
         return this.positionalHistory;
     }
@@ -37,17 +51,18 @@ public class BlockPosHistoryProvider implements ICapabilitySerializable<Compound
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        if (positionalHistory == null) return tag;
+        if (positionalHistory == null || !persistData) return tag;
         tag.putLongArray("LastBlocksPos", positionalHistory.stream().mapToLong(BlockPos::asLong).toArray());
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        if (!tag.contains("LastBlocksPos")) return;
+        if (!tag.contains("LastBlocksPos") || !persistData) return;
+
         List<BlockPos> blocksPos = Arrays.stream(tag.getLongArray("LastBlocksPos")).mapToObj(BlockPos::of).toList();
 
-        this.positionalHistory = new BlockPosHistory(new BlockPos(0, 0, 0), 10);
+        this.positionalHistory = new BlockPosHistory(new BlockPos(0, 0, 0), maxHistory);
         this.positionalHistory.remove(0);
         this.positionalHistory.addAll(blocksPos);
     }
