@@ -1,13 +1,21 @@
 package com.cerbon.cerbons_api.capability.providers;
 
 import com.cerbon.cerbons_api.api.general.data.HistoricalData;
+import com.cerbon.cerbons_api.capability.CerbonsApiCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * This class provides a capability for storing vec3 values.
+ * To use this capability you need to attach it to your object.
+ * <p>
+ * See also: {@link AttachCapabilitiesEvent}, {@link CerbonsApiCapabilities}
+ */
 @AutoRegisterCapability
 public class MoveHistoryProvider implements ICapabilityProvider {
     public static final Capability<MoveHistory> HISTORICAL_DATA = CapabilityManager.get(new CapabilityToken<>() {});

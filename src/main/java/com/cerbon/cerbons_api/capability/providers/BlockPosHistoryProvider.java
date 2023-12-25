@@ -1,17 +1,25 @@
 package com.cerbon.cerbons_api.capability.providers;
 
 import com.cerbon.cerbons_api.api.general.data.HistoricalData;
+import com.cerbon.cerbons_api.capability.CerbonsApiCapabilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class provides a capability for storing block positions.
+ * To use this capability you need to attach it to your object.
+ * <p>
+ * See also: {@link AttachCapabilitiesEvent}, {@link CerbonsApiCapabilities}
+ */
 @AutoRegisterCapability
 public class BlockPosHistoryProvider implements ICapabilitySerializable<CompoundTag> {
     public static final Capability<BlockPosHistory> HISTORICAL_DATA = CapabilityManager.get(new CapabilityToken<>() {});
