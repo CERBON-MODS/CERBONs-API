@@ -1,14 +1,20 @@
 package com.cerbon.cerbons_api.capability.providers;
 
 import com.cerbon.cerbons_api.api.general.data.HistoricalData;
+import com.cerbon.cerbons_api.api.static_utilities.VecUtils;
 import com.cerbon.cerbons_api.capability.CerbonsApiCapabilities;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class provides a capability for storing vec3 values.
@@ -17,17 +23,50 @@ import org.jetbrains.annotations.Nullable;
  * See also: {@link AttachCapabilitiesEvent}, {@link CerbonsApiCapabilities}
  */
 @AutoRegisterCapability
-public class Vec3HistoryProvider implements ICapabilityProvider {
-    public static final Capability<MoveHistory> HISTORICAL_DATA = CapabilityManager.get(new CapabilityToken<>() {});
+public class Vec3HistoryProvider implements ICapabilitySerializable<CompoundTag> {
+    private final Vec3 initialValue;
+    private final int maxHistory;
+    private final boolean persistData;
 
-    private MoveHistory positionalHistory;
-    private final LazyOptional<MoveHistory> optional = LazyOptional.of(this::createHistoricalData);
+    private Vec3History positionalHistory;
+    private final LazyOptional<Vec3History> optional = LazyOptional.of(this::createHistoricalData);
 
-    private MoveHistory createHistoricalData() {
+    public static final Capability<Vec3History> HISTORICAL_DATA = CapabilityManager.get(new CapabilityToken<>() {});
+
+    public Vec3HistoryProvider(Vec3 initialValue, int maxHistory, boolean persistData) {
+        this.initialValue = initialValue;
+        this.maxHistory = maxHistory;
+        this.persistData = persistData;
+    }
+
+    public Vec3HistoryProvider(int maxHistory, boolean persistData) {
+        this(Vec3.ZERO, maxHistory, persistData);
+    }
+
+    private Vec3History createHistoricalData() {
         if(this.positionalHistory == null)
-            this.positionalHistory = new MoveHistory(Vec3.ZERO, 10);
+            this.positionalHistory = new Vec3History(initialValue, maxHistory);
 
         return this.positionalHistory;
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        if (positionalHistory == null || !persistData) return tag;
+        tag.putLongArray("LastVec3s", positionalHistory.stream().map(BlockPos::containing).mapToLong(BlockPos::asLong).toArray());
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag tag) {
+        if (!tag.contains("LastVec3s") || !persistData) return;
+
+        List<Vec3> vec3s = Arrays.stream(tag.getLongArray("LastVec3s")).mapToObj(BlockPos::of).map(VecUtils::asVec3).toList();
+
+        this.positionalHistory = new Vec3History(Vec3.ZERO, maxHistory);
+        this.positionalHistory.remove(0);
+        this.positionalHistory.addAll(vec3s);
     }
 
     @Override
@@ -35,9 +74,9 @@ public class Vec3HistoryProvider implements ICapabilityProvider {
         return HISTORICAL_DATA.orEmpty(cap, optional);
     }
 
-    public static class MoveHistory extends HistoricalData<Vec3> {
+    public static class Vec3History extends HistoricalData<Vec3> {
 
-        public MoveHistory(Vec3 initialValue, int maxHistory) {
+        public Vec3History(Vec3 initialValue, int maxHistory) {
             super(initialValue, maxHistory);
         }
     }
