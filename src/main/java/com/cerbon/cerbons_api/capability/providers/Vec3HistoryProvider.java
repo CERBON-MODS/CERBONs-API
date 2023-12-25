@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  * See also: {@link AttachCapabilitiesEvent}, {@link CerbonsApiCapabilities}
  */
 @AutoRegisterCapability
-public class MoveHistoryProvider implements ICapabilityProvider {
+public class Vec3HistoryProvider implements ICapabilityProvider {
     public static final Capability<MoveHistory> HISTORICAL_DATA = CapabilityManager.get(new CapabilityToken<>() {});
 
     private MoveHistory positionalHistory;

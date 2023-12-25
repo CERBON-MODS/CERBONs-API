@@ -4,7 +4,7 @@ import com.cerbon.cerbons_api.CerbonsApi;
 import com.cerbon.cerbons_api.capability.providers.LevelEventSchedulerProvider;
 import com.cerbon.cerbons_api.api.general.event.EventScheduler;
 import com.cerbon.cerbons_api.capability.providers.BlockPosHistoryProvider;
-import com.cerbon.cerbons_api.capability.providers.MoveHistoryProvider;
+import com.cerbon.cerbons_api.capability.providers.Vec3HistoryProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -23,8 +23,8 @@ public class ForgeEvents {
     public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
         if (!(event.getObject() instanceof Player)) return;
 
-        if (!event.getObject().getCapability(MoveHistoryProvider.HISTORICAL_DATA).isPresent())
-            event.addCapability(new ResourceLocation(CerbonsApi.MOD_ID, "player_move_history"), new MoveHistoryProvider());
+        if (!event.getObject().getCapability(Vec3HistoryProvider.HISTORICAL_DATA).isPresent())
+            event.addCapability(new ResourceLocation(CerbonsApi.MOD_ID, "player_move_history"), new Vec3HistoryProvider());
 
         if (!event.getObject().getCapability(BlockPosHistoryProvider.HISTORICAL_DATA).isPresent())
             event.addCapability(new ResourceLocation(CerbonsApi.MOD_ID, "player_block_pos_history"), new BlockPosHistoryProvider());
@@ -40,7 +40,7 @@ public class ForgeEvents {
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side.isClient()) return;
 
-        event.player.getCapability(MoveHistoryProvider.HISTORICAL_DATA).ifPresent(data -> {
+        event.player.getCapability(Vec3HistoryProvider.HISTORICAL_DATA).ifPresent(data -> {
             Vec3 previousPosition = data.get(0);
             Vec3 newPosition = event.player.position();
 
