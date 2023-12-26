@@ -14,7 +14,7 @@ public class VecUtils {
     }
 
     public static Vec3 planeProject(Vec3 vec, Vec3 planeVector) {
-        return vec.subtract(planeVector.multiply(vec.dot(planeVector), vec.dot(planeVector), vec.dot(planeVector)));
+        return vec.subtract(planeVector.scale(vec.dot(planeVector)));
     }
 
     public static Vec3 asVec3(BlockPos blockPos) {
@@ -22,7 +22,7 @@ public class VecUtils {
     }
 
     public static Vec3 negateServer(Vec3 vec) {
-        return vec.multiply(-1.0, -1.0, -1.0);
+        return vec.scale(-1.0);
     }
 
     public static Vec3 coerceAtLeast(Vec3 vec1, Vec3 vec2) {
