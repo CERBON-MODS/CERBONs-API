@@ -63,8 +63,8 @@ public abstract class MultiplayerGameModeMixin {
 
             CerbonsApiPacketHandler.sendToServer(new MultipartEntityInteractionC2SPacket(entity.getId(), part, hand, client.cameraEntity.isShiftKeyDown(), PlayerInteractMultipartEntity.InteractionType.INTERACT));
 
-            if (localPlayerMode == GameType.SPECTATOR) return;
-            cir.setReturnValue(multipartAwareEntity.interact(player, hand, part));
+            if (localPlayerMode != GameType.SPECTATOR)
+                cir.setReturnValue(multipartAwareEntity.interact(player, hand, part));
 
             cir.setReturnValue(InteractionResult.PASS);
         }
