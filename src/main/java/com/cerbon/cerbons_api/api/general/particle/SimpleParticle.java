@@ -41,10 +41,8 @@ public class SimpleParticle extends TextureSheetParticle {
         this.yd = particleContext.vel().y();
         this.zd = particleContext.vel().z();
 
-        if (cycleSprites)
-            setSpriteFromAge(particleContext.spriteSet());
-        else
-            setSprite(particleContext.spriteSet().get(this.random));
+        if (cycleSprites) setSpriteFromAge(particleContext.spriteSet());
+        else setSprite(particleContext.spriteSet().get(this.random));
     }
 
     @Override
