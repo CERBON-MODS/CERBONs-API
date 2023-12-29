@@ -18,6 +18,8 @@ import java.util.List;
  * This class provides a capability for storing block positions.
  * To use this capability you need to attach it to your object.
  * <p>
+ * Never use it with vanilla objects.
+ * <p>
  * See also: {@link AttachCapabilitiesEvent}, {@link CapabilityUtils}
  */
 @AutoRegisterCapability
