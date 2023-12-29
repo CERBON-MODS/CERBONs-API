@@ -3,12 +3,13 @@ package com.cerbon.cerbons_api.packet;
 import com.cerbon.cerbons_api.CerbonsApi;
 import com.cerbon.cerbons_api.packet.custom.multipart_entities.MultipartEntityInteractionC2SPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.SimpleChannel;
 
 public class CerbonsApiPacketHandler {
-    private static final String PROTOCOL_VERSION = "1";
+    private static final int PROTOCOL_VERSION = 1;
     public static SimpleChannel INSTANCE;
 
     private static int packetId = 0;
@@ -17,10 +18,10 @@ public class CerbonsApiPacketHandler {
     }
 
     public static void register() {
-        SimpleChannel net = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(CerbonsApi.MOD_ID, "packets"))
-                .networkProtocolVersion(() -> PROTOCOL_VERSION)
-                .clientAcceptedVersions(s -> true)
-                .serverAcceptedVersions(s -> true)
+        SimpleChannel net = ChannelBuilder.named(new ResourceLocation(CerbonsApi.MOD_ID, "packets"))
+                .networkProtocolVersion(PROTOCOL_VERSION)
+                .clientAcceptedVersions((s, v) -> true)
+                .serverAcceptedVersions((s, v) -> true)
                 .simpleChannel();
 
         INSTANCE = net;
@@ -33,6 +34,6 @@ public class CerbonsApiPacketHandler {
     }
 
     public static <MSG> void sendToServer(MSG message) {
-        INSTANCE.sendToServer(message);
+        INSTANCE.send(message, PacketDistributor.SERVER.noArg());
     }
 }
