@@ -1,15 +1,15 @@
 modLoader="javafml"
 loaderVersion="${loader_version_range}"
 license="${mod_license}"
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+issueTrackerURL="https://github.com/CERBON-MODS/CERBONs-API/issues"
 
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
-#displayURL="https://change.me.to.your.mods.homepage.example.invalid/"
-#logoFile="cerbons_api.png"
-#credits="Thanks for this example mod goes to Java" #optional
+displayURL="https://www.curseforge.com/minecraft/mc-mods/cerbons-api-forge"
+logoFile="logo.jpg"
+#credits="Thanks for this example mod goes to Java"
 authors="${mod_authors}"
 #displayTest="MATCH_VERSION"
 description='''${mod_description}'''
