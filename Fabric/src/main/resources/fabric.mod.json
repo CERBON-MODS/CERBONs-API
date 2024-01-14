@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": ["${mod_authors}"],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/cerbons-api",
+    "sources": "https://github.com/CERBON-MODS/CERBONs-API",
+    "issues": "https://github.com/CERBON-MODS/CERBONs-API/issues"
+  },
+
+  "license": "${mod_license}",
+  "icon": "${logo_file}",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.cerbon.cerbons_api.fabric.CerbonsAPIFabric"
+    ],
+    "client": [
+      "com.cerbon.cerbons_api.fabric.CerbonsAPIFabric"
+    ],
+    "cardinal-components-world": [
+      "com.cerbon.cerbons_api.fabric.cardinalComponents.Components"
+    ]
+  },
+  "mixins": [
+    "cerbons_api.mixins.json",
+    "cerbons_api-common.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "${fabric_loader_version_range}",
+    "minecraft": "${minecraft_version_range}",
+    "cardinal-components-base": ">=${cardinal_components_version}",
+    "cardinal-components-world": ">=${cardinal_components_version}"
+  },
+  "custom":  {
+    "cardinal-components": [
+      "${mod_id}:event_scheduler"
+    ]
+  }
+}
