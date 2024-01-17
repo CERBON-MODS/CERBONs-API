@@ -1,5 +1,9 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'net.darkhax.curseforgegradle' version '1.1.18'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 architectury {
@@ -78,6 +82,38 @@ sourcesJar {
 components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
         skip()
+    }
+}
+
+tasks.register("publishCurseForge", TaskPublishCurseForge) {
+    apiToken = System.getenv("CURSEFORGE_TOKEN")
+
+    def mainFile = upload(955605, remapJar)
+    mainFile.addModLoader("Fabric")
+    mainFile.addGameVersion(minecraft_version)
+    mainFile.releaseType = release_type
+    mainFile.changelogType = "markdown"
+    mainFile.changelog = rootProject.file(changelog).getText("UTF-8")
+
+    mainFile.addRequirement("fabric-api")
+    mainFile.addRequirement(cerbons_api)
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+
+    versionName = archivesBaseName
+    versionNumber = mod_version
+    versionType = release_type
+    gameVersions = [minecraft_version]
+    loaders = ["fabric"]
+    projectId = "ABCDEFGH" //TODO: Change to Modrinth project id
+    uploadFile = remapJar
+    changelog = rootProject.file(project.changelog).getText('UTF-8')
+
+    dependencies {
+        required.project "fabric-api"
+        required.project cerbons_api
     }
 }
 
