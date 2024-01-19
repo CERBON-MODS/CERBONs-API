@@ -1,1 +1,26 @@
-I would like to credit [Barribob](https://www.curseforge.com/members/barribob/projects) because great part of the code were taken from his Bosses of Mass Destruction mod.
+# Credits
+
+This project uses code from other open source projects. We are grateful to these developers for their contributions to open source.
+
+## List of used and adapted projects
+
+### Bosses of Mass Destruction
+
+- **Author:** Barribob
+- **License:** GNU LESSER GENERAL PUBLIC LICENSE
+- **Link:** https://github.com/miyo6032/bosses-of-mass-destruction
+- **Used Parts:** Event Scheduler, Multipart Entities, Static Utilities, Particle Builder and Historical Data
+
+### Common Networking
+
+- **Author:** mysticdrew
+- **License:** MIT
+- **Link:** https://github.com/mysticdrew/common-networking
+- **Used Parts:** The mod itself
+
+### ResourcefulLib
+
+- **Author:** Team Resourceful
+- **License:** MIT
+- **Link:** https://github.com/Team-Resourceful/ResourcefulLib
+- **Used Parts:** Common Registry System
