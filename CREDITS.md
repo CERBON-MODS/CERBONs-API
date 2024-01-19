@@ -6,7 +6,7 @@ This project uses code from other open source projects. We are grateful to these
 
 ### Bosses of Mass Destruction
 
-- **Author:** Barribob
+- **Author:** miyo6032
 - **License:** GNU LESSER GENERAL PUBLIC LICENSE
 - **Link:** https://github.com/miyo6032/bosses-of-mass-destruction
 - **Used Parts:** Event Scheduler, Multipart Entities, Static Utilities, Particle Builder and Historical Data
