@@ -14,3 +14,7 @@
 /Forge/.gradle/
 /Forge/build/
 /Forge/run
+
+/NeoForge/.gradle/
+/NeoForge/build/
+/NeoForge/run
