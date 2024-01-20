@@ -87,7 +87,7 @@ tasks.register("publishCurseForge", TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
 
     def mainFile = upload(955605, jar)
-    mainFile.addModLoader("Forge")
+    mainFile.addModLoader("NeoForge")
     mainFile.addGameVersion(minecraft_version)
     mainFile.releaseType = release_type
     mainFile.changelogType = "markdown"
@@ -103,7 +103,7 @@ modrinth {
     versionNumber = mod_version
     versionType = release_type
     gameVersions = [minecraft_version]
-    loaders = ["forge"]
+    loaders = ["neoforge"]
     projectId = "ABCDEFGH" //TODO: Change to Modrinth project id
     uploadFile = jar
     changelog = rootProject.file(project.changelog).getText('UTF-8')
