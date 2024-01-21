@@ -110,13 +110,13 @@ tasks.register("publishCurseForge", TaskPublishCurseForge) {
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
 
-    projectId = modrinth_project_id + "-" + mod_version
+    projectId = modrinth_project_id
     uploadFile = remapJar
     loaders = ["fabric"]
 
     gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
 
-    versionName = archivesBaseName
+    versionName = archivesBaseName + "-" + mod_version
     versionNumber = mod_version
     versionType = release_type
 
