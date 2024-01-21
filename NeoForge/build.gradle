@@ -83,33 +83,42 @@ components.java {
     }
 }
 
+tasks.register("publishCurseForgeAndModrinth", Task) {
+    dependsOn publishCurseForge
+    dependsOn tasks.modrinth
+}
+
 tasks.register("publishCurseForge", TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
 
-    def mainFile = upload(955605, jar)
+    def mainFile = upload(curseforge_project_id, remapJar)
     mainFile.addModLoader("NeoForge")
-    mainFile.addGameVersion(minecraft_version)
+    mainFile.addGameVersion(game_versions.replaceAll(" ", "").split(","))
+
     mainFile.releaseType = release_type
-    mainFile.changelogType = "markdown"
+    mainFile.changelogType = changelog_type
     mainFile.changelog = rootProject.file(changelog).getText("UTF-8")
 
-    mainFile.addRequirement(cerbons_api)
+    mainFile.addRequirement(required_dependencies_neo.replaceAll(" ", "").split(","))
 }
 
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
 
-    versionName = archivesBaseName
+    projectId = modrinth_project_id
+    uploadFile = remapJar
+    loaders = ["neoforge"]
+
+    gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
+
+    versionName = archivesBaseName + "-" + mod_version
     versionNumber = mod_version
     versionType = release_type
-    gameVersions = [minecraft_version]
-    loaders = ["neoforge"]
-    projectId = "ABCDEFGH" //TODO: Change to Modrinth project id
-    uploadFile = jar
+
     changelog = rootProject.file(project.changelog).getText('UTF-8')
 
     dependencies {
-        required.project cerbons_api
+        required.project required_dependencies_neo.replaceAll(" ", "").split(",")
     }
 }
 
