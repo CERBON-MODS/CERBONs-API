@@ -110,7 +110,7 @@ tasks.register("publishCurseForge", TaskPublishCurseForge) {
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
 
-    projectId = modrinth_project_id
+    projectId = modrinth_project_id + "-" + mod_version
     uploadFile = remapJar
     loaders = ["fabric"]
 

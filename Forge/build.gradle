@@ -118,7 +118,7 @@ modrinth {
 
     gameVersions = game_versions.replaceAll(" ", "").split(",") as Iterable<? extends String>
 
-    versionName = archivesBaseName
+    versionName = archivesBaseName + "-" + mod_version
     versionNumber = mod_version
     versionType = release_type
 
