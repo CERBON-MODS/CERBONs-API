@@ -17,6 +17,7 @@ public class CerbonsAPIFabric implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        CerbonsAPI.init();
         new CommonNetwork(new FabricNetworkHandler(Side.CLIENT));
     }
 }
