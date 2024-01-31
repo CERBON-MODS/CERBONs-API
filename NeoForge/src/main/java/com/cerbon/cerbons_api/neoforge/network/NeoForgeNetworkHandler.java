@@ -91,7 +91,7 @@ public class NeoForgeNetworkHandler extends PacketRegistrationHandler {
             try {
                 Side side = ctx.flow().getReceptionSide().equals(LogicalSide.SERVER) ? Side.SERVER : Side.CLIENT;
                 Player player = ctx.player().orElse(null);
-                handler.accept(new PacketContext<>((ServerPlayer) player, payload.packet(), side));
+                handler.accept(new PacketContext<>(player instanceof ServerPlayer serverPlayer ? serverPlayer : null, payload.packet(), side));
             }
             catch (Throwable t) {
                 Constants.LOGGER.error("Error handling packet: {} -> ", payload.packet().getClass(), t);
