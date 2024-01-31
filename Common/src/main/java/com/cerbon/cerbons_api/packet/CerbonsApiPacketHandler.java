@@ -9,11 +9,10 @@ public class CerbonsApiPacketHandler {
     private final ResourceLocation CHANNEL = new ResourceLocation(Constants.MOD_ID, "packets");
 
     public void register() {
-        Network
-                .registerPacket(CHANNEL, MultipartEntityInteractionC2SPacket.class,
+        Network.registerPacket(CHANNEL, MultipartEntityInteractionC2SPacket.class,
                         MultipartEntityInteractionC2SPacket::new,
                         MultipartEntityInteractionC2SPacket::write,
                         MultipartEntityInteractionC2SPacket::handle
-                );
+        );
     }
 }
