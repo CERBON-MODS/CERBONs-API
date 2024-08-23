@@ -170,24 +170,24 @@ public class SimpleParticle extends TextureSheetParticle {
         float o = this.getV1();
         float p = getLightColor(partialTicks);
 
-        vertexConsumer.vertex(
+        vertexConsumer.addVertex(
                 vector3fs[0].x(), vector3fs[0].y(),
                 vector3fs[0].z()
-        ).uv(m, o).color(rCol, gCol, bCol, alpha).uv2((int) p).endVertex();
+        ).setUv(m, o).setColor(rCol, gCol, bCol, alpha).setLight((int) p);
 
-        vertexConsumer.vertex(
+        vertexConsumer.addVertex(
                 vector3fs[1].x(), vector3fs[1].y(),
                 vector3fs[1].z()
-        ).uv(m, n).color(rCol, gCol, bCol, alpha).uv2((int) p).endVertex();
+        ).setUv(m, n).setColor(rCol, gCol, bCol, alpha).setLight((int) p);
 
-        vertexConsumer.vertex(
+        vertexConsumer.addVertex(
                 vector3fs[2].x(), vector3fs[2].y(),
                 vector3fs[2].z()
-        ).uv(l, n).color(rCol, gCol, bCol, alpha).uv2((int) p).endVertex();
+        ).setUv(l, n).setColor(rCol, gCol, bCol, alpha).setLight((int) p);
 
-        vertexConsumer.vertex(
+        vertexConsumer.addVertex(
                 vector3fs[3].x(), vector3fs[3].y(),
                 vector3fs[3].z()
-        ).uv(l, o).color(rCol, gCol, bCol, alpha).uv2((int) p).endVertex();
+        ).setUv(l, o).setColor(rCol, gCol, bCol, alpha).setLight((int) p);
     }
 }

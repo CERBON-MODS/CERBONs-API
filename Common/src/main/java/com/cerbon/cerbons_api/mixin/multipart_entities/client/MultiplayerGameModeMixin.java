@@ -9,6 +9,7 @@ import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec3;
@@ -32,9 +33,9 @@ public abstract class MultiplayerGameModeMixin {
             ensureHasSentCarriedItem();
 
             Minecraft client = Minecraft.getInstance();
-            final Vec3 pos = client.cameraEntity.getEyePosition(client.getFrameTime());
-            final Vec3 dir = client.cameraEntity.getViewVector(client.getFrameTime());
-            final double reach = client.gameMode.getPickRange();
+            final Vec3 pos = client.cameraEntity.getEyePosition(client.getFps());
+            final Vec3 dir = client.cameraEntity.getViewVector(client.getFps());
+            final double reach = client.player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE);
             String part = multipartAwareEntity.getBounds().raycast(pos, pos.add(dir.scale(reach)));
             if (part == null) return;
 
@@ -55,9 +56,9 @@ public abstract class MultiplayerGameModeMixin {
             ensureHasSentCarriedItem();
 
             Minecraft client = Minecraft.getInstance();
-            final Vec3 pos = client.cameraEntity.getEyePosition(client.getFrameTime());
-            final Vec3 dir = client.cameraEntity.getViewVector(client.getFrameTime());
-            final double reach = client.gameMode.getPickRange();
+            final Vec3 pos = client.cameraEntity.getEyePosition(client.getFps());
+            final Vec3 dir = client.cameraEntity.getViewVector(client.getFps());
+            final double reach = client.player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE);;
             String part = multipartAwareEntity.getBounds().raycast(pos, pos.add(dir.scale(reach)));
             if (part == null) return;
 

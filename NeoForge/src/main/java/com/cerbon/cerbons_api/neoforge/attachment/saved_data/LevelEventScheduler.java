@@ -1,6 +1,7 @@
 package com.cerbon.cerbons_api.neoforge.attachment.saved_data;
 
 import com.cerbon.cerbons_api.api.general.event.EventScheduler;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -17,12 +18,12 @@ public class LevelEventScheduler extends SavedData {
         this(new CompoundTag());
     }
 
-    public LevelEventScheduler(CompoundTag tag) {}
-
     @Override
-    public @NotNull CompoundTag save(@NotNull CompoundTag tag) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         return tag;
     }
+
+    public LevelEventScheduler(CompoundTag tag) {}
 
     public static EventScheduler get(Level level) {
         LevelEventScheduler levelEventScheduler = getSavedData(level);

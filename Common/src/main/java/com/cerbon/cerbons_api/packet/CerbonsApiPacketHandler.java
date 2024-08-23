@@ -6,7 +6,7 @@ import com.cerbon.cerbons_api.util.Constants;
 import net.minecraft.resources.ResourceLocation;
 
 public class CerbonsApiPacketHandler {
-    private final ResourceLocation CHANNEL = new ResourceLocation(Constants.MOD_ID, "packets");
+    private final ResourceLocation CHANNEL = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "packets");
 
     public void register() {
         Network.registerPacket(CHANNEL, MultipartEntityInteractionC2SPacket.class,

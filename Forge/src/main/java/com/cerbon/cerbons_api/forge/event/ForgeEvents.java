@@ -16,7 +16,7 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void onAttachCapabilitiesLevel(AttachCapabilitiesEvent<Level> event) {
         if (event.getObject() == null || event.getObject().getCapability(LevelEventSchedulerProvider.EVENT_SCHEDULER).isPresent()) return;
-        event.addCapability(new ResourceLocation(Constants.MOD_ID, "event_scheduler"), new LevelEventSchedulerProvider());
+        event.addCapability(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "event_scheduler"), new LevelEventSchedulerProvider());
     }
 
     @SubscribeEvent

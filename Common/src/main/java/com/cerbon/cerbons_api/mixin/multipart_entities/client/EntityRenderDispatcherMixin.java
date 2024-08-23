@@ -18,23 +18,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class EntityRenderDispatcherMixin {
 
     @Inject(method = "renderHitbox", at = @At("RETURN"))
-    private static void drawOrientedBoxes(PoseStack matrix, VertexConsumer vertices, Entity entity, float tickDelta, CallbackInfo ci) {
+    private static void drawOrientedBoxes(PoseStack poseStack, VertexConsumer buffer, Entity entity, float red, float green, float blue, float alpha, CallbackInfo ci) {
         final AABB box = entity.getBoundingBox();
         if (box instanceof final CompoundOrientedBox compoundOrientedBox) {
-            matrix.pushPose();
-            matrix.translate(-entity.getX(), -entity.getY(), -entity.getZ());
+            poseStack.pushPose();
+            poseStack.translate(-entity.getX(), -entity.getY(), -entity.getZ());
 
             for (final OrientedBox orientedBox : compoundOrientedBox) {
-                matrix.pushPose();
+                poseStack.pushPose();
                 final Vec3 center = orientedBox.getCenter();
-                matrix.translate(center.x, center.y, center.z);
-                matrix.mulPose(orientedBox.getRotation().toFloatQuat());
-                LevelRenderer.renderLineBox(matrix, vertices, orientedBox.getExtents(), 0, 0, 1, 1);
-                matrix.popPose();
+                poseStack.translate(center.x, center.y, center.z);
+                poseStack.mulPose(orientedBox.getRotation().toFloatQuat());
+                LevelRenderer.renderLineBox(poseStack, buffer, orientedBox.getExtents(), 0, 0, 1, 1);
+                poseStack.popPose();
             }
 
-            compoundOrientedBox.toVoxelShape().forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> LevelRenderer.renderLineBox(matrix, vertices, minX, minY, minZ, maxX, maxY, maxZ, 0, 1, 0, 1f));
-            matrix.popPose();
+            compoundOrientedBox.toVoxelShape().forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> LevelRenderer.renderLineBox(poseStack, buffer, minX, minY, minZ, maxX, maxY, maxZ, 0, 1, 0, 1f));
+            poseStack.popPose();
         }
     }
 }

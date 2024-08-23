@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -30,11 +31,11 @@ public class FabricNetworkHandler extends PacketRegistrationHandler {
             if (Side.CLIENT.equals(this.side)) {
                 Constants.LOGGER.debug("Registering packet {} : {} on the: {}", container.packetIdentifier(), container.messageType(), Side.CLIENT);
 
-                ClientPlayNetworking.registerGlobalReceiver(container.packetIdentifier(), ((client, listener, buf, responseSender) -> {
+                ClientPlayNetworking.registerGlobalReceiver(new CustomPacketPayload.Type<>(container.packetIdentifier()), (CustomPacketPayload payload, ClientPlayNetworking.Context context) -> {
                     buf.readByte(); // handle forge discriminator
                     T message = container.decoder().apply(buf);
-                    client.execute(() -> container.handler().accept(new PacketContext<>(message, Side.CLIENT)));
-                }));
+                    context.client().execute(() -> container.handler().accept(new PacketContext<>(message, Side.CLIENT)));
+                });
             }
             else {
                 Constants.LOGGER.debug("Registering packet {} : {} on the: {}", container.packetIdentifier(), container.messageType(), Side.SERVER);
