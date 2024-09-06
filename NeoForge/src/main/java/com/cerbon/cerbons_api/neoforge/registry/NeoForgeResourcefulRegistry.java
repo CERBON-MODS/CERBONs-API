@@ -4,6 +4,7 @@ import com.cerbon.cerbons_api.api.registry.RegistryEntries;
 import com.cerbon.cerbons_api.api.registry.RegistryEntry;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistry;
 import net.minecraft.core.Registry;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.Collection;
@@ -29,6 +30,6 @@ public class NeoForgeResourcefulRegistry<T> implements ResourcefulRegistry<T> {
 
     @Override
     public void register() {
-        register.register(FMLJavaModLoadingContext.get().getModEventBus());
+        register.register(ModLoadingContext.get().getActiveContainer().getEventBus());
     }
 }
