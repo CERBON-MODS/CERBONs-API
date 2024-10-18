@@ -1,15 +1,13 @@
 package com.cerbon.cerbons_api.neoforge.network;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
-import java.util.function.BiConsumer;
-
-public record NeoForgePacketContainer<T>(Class<T> messageType,
-                                         ResourceLocation packetIdentifier,
-                                         BiConsumer<T, FriendlyByteBuf> encoder,
-                                         FriendlyByteBuf.Reader<NeoForgePacket<T>> decoder,
-                                         IPayloadHandler<NeoForgePacket<T>> handler)
+public record NeoForgePacketContainer<T extends CustomPacketPayload>(ResourceLocation packetIdentifier,
+                                                                     StreamCodec<RegistryFriendlyByteBuf, T> codec,
+                                                                     IPayloadHandler<T> handler)
 {
 }
