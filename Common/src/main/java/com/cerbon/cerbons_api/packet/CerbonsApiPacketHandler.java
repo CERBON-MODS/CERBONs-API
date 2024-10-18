@@ -6,12 +6,11 @@ import com.cerbon.cerbons_api.util.Constants;
 import net.minecraft.resources.ResourceLocation;
 
 public class CerbonsApiPacketHandler {
-    private final ResourceLocation CHANNEL = new ResourceLocation(Constants.MOD_ID, "packets");
+    public static final ResourceLocation MULTIPART_ENTITY_INTERACTION = new ResourceLocation(Constants.MOD_ID, "multipart_entity_interaction");
 
     public void register() {
-        Network.registerPacket(CHANNEL, MultipartEntityInteractionC2SPacket.class,
-                        MultipartEntityInteractionC2SPacket::new,
-                        MultipartEntityInteractionC2SPacket::write,
+        Network.registerPacket(MULTIPART_ENTITY_INTERACTION,
+                        MultipartEntityInteractionC2SPacket.CODEC,
                         MultipartEntityInteractionC2SPacket::handle
         );
     }

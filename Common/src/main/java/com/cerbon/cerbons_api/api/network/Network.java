@@ -1,28 +1,29 @@
 package com.cerbon.cerbons_api.api.network;
 
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.function.BiConsumer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class Network {
+    private static final Map<ResourceLocation, CustomPacketPayload.Type<?>> TYPES = new HashMap<>();
 
     /**
      * Packet Registration
      *
      * @param packetIdentifier The unique {@link ResourceLocation} packet id.
-     * @param messageType      The class of the packet.
-     * @param encoder          The encoder method.
-     * @param decoder          The decoder method.
+     * @param codec            The codec.
      * @param handler          The handler method.
      * @param <T>              The type
      * @return The registrar for chaining registrations.
      */
-    public static <T> IPacketRegistrar registerPacket(ResourceLocation packetIdentifier, Class<T> messageType, Function<FriendlyByteBuf, T> decoder, BiConsumer<T, FriendlyByteBuf> encoder, Consumer<PacketContext<T>> handler) {
-        return CommonNetwork.registerPacket(packetIdentifier, messageType, encoder, decoder, handler);
+    public static <T extends CustomPacketPayload> IPacketRegistrar registerPacket(ResourceLocation packetIdentifier, StreamCodec<RegistryFriendlyByteBuf, T> codec, Consumer<PacketContext<T>> handler) {
+        return CommonNetwork.registerPacket(packetIdentifier, codec, handler);
     }
 
     /**
@@ -32,5 +33,16 @@ public class Network {
      */
     public static INetworkHandler getNetworkHandler() {
         return CommonNetwork.INSTANCE.packetRegistration();
+    }
+
+    /**
+     * Returns the type of the network packet.
+     *
+     * @param packetIdentifier The unique {@link ResourceLocation} packet id.
+     * @param <T>              The class type.
+     * @return The payload type.
+     */
+    public static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> getType(ResourceLocation packetIdentifier) {
+        return (CustomPacketPayload.Type<T>) TYPES.computeIfAbsent(packetIdentifier, id -> new CustomPacketPayload.Type<>(id));
     }
 }

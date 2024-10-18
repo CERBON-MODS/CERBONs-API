@@ -34,7 +34,7 @@ public abstract class MultiplayerGameModeMixin {
             Minecraft client = Minecraft.getInstance();
             final Vec3 pos = client.cameraEntity.getEyePosition(client.getFrameTime());
             final Vec3 dir = client.cameraEntity.getViewVector(client.getFrameTime());
-            final double reach = client.gameMode.getPickRange();
+            final double reach = client.player.entityInteractionRange();
             String part = multipartAwareEntity.getBounds().raycast(pos, pos.add(dir.scale(reach)));
             if (part == null) return;
 
@@ -57,7 +57,7 @@ public abstract class MultiplayerGameModeMixin {
             Minecraft client = Minecraft.getInstance();
             final Vec3 pos = client.cameraEntity.getEyePosition(client.getFrameTime());
             final Vec3 dir = client.cameraEntity.getViewVector(client.getFrameTime());
-            final double reach = client.gameMode.getPickRange();
+            final double reach = client.player.entityInteractionRange();
             String part = multipartAwareEntity.getBounds().raycast(pos, pos.add(dir.scale(reach)));
             if (part == null) return;
 

@@ -1,6 +1,7 @@
 package com.cerbon.cerbons_api.api.network;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +20,7 @@ public class Dispatcher {
      * @param packet the packet
      * @param <T>    The type
      */
-    public static <T> void sendToServer(T packet) {
+    public static <T extends CustomPacketPayload> void sendToServer(T packet) {
         Network.getNetworkHandler().sendToServer(packet);
     }
 
@@ -31,7 +32,7 @@ public class Dispatcher {
      * @param ignoreCheck ignore the check if the server has the packet registered.
      * @param <T>         The type
      */
-    public static <T> void sendToServer(T packet, boolean ignoreCheck) {
+    public static <T extends CustomPacketPayload> void sendToServer(T packet, boolean ignoreCheck) {
         Network.getNetworkHandler().sendToServer(packet, ignoreCheck);
     }
 
@@ -42,7 +43,7 @@ public class Dispatcher {
      * @param player the player
      * @param <T>    The type
      */
-    public static <T> void sendToClient(T packet, ServerPlayer player) {
+    public static <T extends CustomPacketPayload> void sendToClient(T packet, ServerPlayer player) {
         Network.getNetworkHandler().sendToClient(packet, player);
     }
 
@@ -53,7 +54,7 @@ public class Dispatcher {
      * @param players the players
      * @param <T>     The type
      */
-    public static <T> void sendToClients(T packet, List<ServerPlayer> players) {
+    public static <T extends CustomPacketPayload> void sendToClients(T packet, List<ServerPlayer> players) {
         for (ServerPlayer player : players)
             sendToClient(packet, player);
     }
@@ -65,7 +66,7 @@ public class Dispatcher {
      * @param server the server
      * @param <T>    The type
      */
-    public static <T> void sendToAllClients(T packet, MinecraftServer server) {
+    public static <T extends CustomPacketPayload> void sendToAllClients(T packet, MinecraftServer server) {
         sendToClients(packet, server.getPlayerList().getPlayers());
     }
 
@@ -76,7 +77,7 @@ public class Dispatcher {
      * @param level  the level
      * @param <T>    The type
      */
-    public static <T> void sendToClientsInLevel(T packet, ServerLevel level) {
+    public static <T extends CustomPacketPayload> void sendToClientsInLevel(T packet, ServerLevel level) {
         sendToClients(packet, level.players());
     }
 
@@ -87,7 +88,7 @@ public class Dispatcher {
      * @param chunk  the chunk
      * @param <T>    The type
      */
-    public static <T> void sendToClientsLoadingChunk(T packet, LevelChunk chunk) {
+    public static <T extends CustomPacketPayload> void sendToClientsLoadingChunk(T packet, LevelChunk chunk) {
         ServerChunkCache chunkCache = (ServerChunkCache) chunk.getLevel().getChunkSource();
         sendToClients(packet, chunkCache.chunkMap.getPlayers(chunk.getPos(), false));
     }
@@ -101,7 +102,7 @@ public class Dispatcher {
      * @param pos    the chunkpos
      * @param <T>    The type
      */
-    public static <T> void sendToClientsLoadingPos(T packet, ServerLevel level, ChunkPos pos) {
+    public static <T extends CustomPacketPayload> void sendToClientsLoadingPos(T packet, ServerLevel level, ChunkPos pos) {
         sendToClientsLoadingChunk(packet, level.getChunk(pos.x, pos.z));
     }
 
@@ -113,7 +114,7 @@ public class Dispatcher {
      * @param pos    the blockpos
      * @param <T>    The type
      */
-    public static <T> void sendToClientsLoadingPos(T packet, ServerLevel level, BlockPos pos) {
+    public static <T extends CustomPacketPayload> void sendToClientsLoadingPos(T packet, ServerLevel level, BlockPos pos) {
         sendToClientsLoadingPos(packet, level, new ChunkPos(pos));
     }
 
@@ -125,7 +126,7 @@ public class Dispatcher {
      * @param pos    the vec3 pos
      * @param <T>    The type
      */
-    public static  <T> void sendToClientsLoadingPos(T packet, ServerLevel level, Vec3 pos) {
+    public static  <T extends CustomPacketPayload> void sendToClientsLoadingPos(T packet, ServerLevel level, Vec3 pos) {
         sendToClientsLoadingPos(packet, level, BlockPos.containing(pos));
     }
 
@@ -138,7 +139,7 @@ public class Dispatcher {
      * @param range  the range
      * @param <T>    The type
      */
-    public static <T> void sendToClientsInRange(T packet, ServerLevel level, BlockPos pos, double range) {
+    public static <T extends CustomPacketPayload> void sendToClientsInRange(T packet, ServerLevel level, BlockPos pos, double range) {
         for (ServerPlayer player : level.players())
             if (player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= range * range)
                 sendToClient(packet, player);

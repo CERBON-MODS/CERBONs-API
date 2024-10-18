@@ -3,17 +3,17 @@ package com.cerbon.cerbons_api.api.network;
 import com.cerbon.cerbons_api.api.network.data.PacketContainer;
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
 import com.cerbon.cerbons_api.api.network.data.Side;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class DelayedPacketRegistrationHandler implements IPacketRegistrar {
-    private static final Map<Class<?>, PacketContainer<?>> QUEUED_PACKET_MAP = new HashMap<>();
+    private static final Map<ResourceLocation, PacketContainer<?>> QUEUED_PACKET_MAP = new HashMap<>();
 
     @Override
     public Side getSide() {
@@ -21,12 +21,11 @@ public class DelayedPacketRegistrationHandler implements IPacketRegistrar {
     }
 
     @Override
-    public <T> IPacketRegistrar registerPacket(ResourceLocation packetIdentifier, Class<T> messageType, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, Consumer<PacketContext<T>> handler) {
-        PacketContainer<T> container = new PacketContainer<>(packetIdentifier, messageType, encoder, decoder, handler);
-        QUEUED_PACKET_MAP.put(messageType, container);
+    public <T extends CustomPacketPayload> IPacketRegistrar registerPacket(ResourceLocation packetIdentifier, StreamCodec<RegistryFriendlyByteBuf, T> codec, Consumer<PacketContext<T>> handler) {
+        PacketContainer<T> container = new PacketContainer<>(packetIdentifier, codec, handler);
+        QUEUED_PACKET_MAP.put(packetIdentifier, container);
         return this;
     }
-
 
     public void registerQueuedPackets(PacketRegistrationHandler packetRegistration) {
         if (!QUEUED_PACKET_MAP.isEmpty()) {
