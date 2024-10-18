@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class EntityRenderDispatcherMixin {
 
     @Inject(method = "renderHitbox", at = @At("RETURN"))
-    private static void drawOrientedBoxes(PoseStack matrix, VertexConsumer vertices, Entity entity, float tickDelta, CallbackInfo ci) {
+    private static void drawOrientedBoxes(PoseStack matrix, VertexConsumer vertices, Entity entity, float red, float green, float blue, float alpha, CallbackInfo ci) {
         final AABB box = entity.getBoundingBox();
         if (box instanceof final CompoundOrientedBox compoundOrientedBox) {
             matrix.pushPose();

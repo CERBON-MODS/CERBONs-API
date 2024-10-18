@@ -14,8 +14,10 @@ import net.neoforged.fml.loading.FMLLoader;
 @Mod(Constants.MOD_ID)
 public class CerbonsAPINeoForge {
     private final PacketRegistrationHandler handler;
+    private static IEventBus modEventBus;
 
     public CerbonsAPINeoForge(IEventBus modEventBus) {
+        CerbonsAPINeoForge.modEventBus = modEventBus;
         CerbonsAPI.init();
 
         modEventBus.addListener(this::commonSetupEvent);
@@ -25,5 +27,9 @@ public class CerbonsAPINeoForge {
 
     public void commonSetupEvent(FMLCommonSetupEvent event) {
         new CommonNetwork(handler);
+    }
+
+    public static IEventBus getModEventBus() {
+        return modEventBus;
     }
 }

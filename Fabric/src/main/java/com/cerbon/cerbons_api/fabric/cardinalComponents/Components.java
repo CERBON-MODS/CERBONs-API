@@ -11,7 +11,7 @@ import org.ladysnake.cca.api.v3.world.WorldComponentInitializer;
 
 public class Components implements WorldComponentInitializer {
     private static final ComponentKey<ILevelEventSchedulerComponent> eventSchedulerComponentKey = ComponentRegistryV3.INSTANCE.getOrCreate(
-            new ResourceLocation(Constants.MOD_ID, "event_scheduler"),
+            ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "event_scheduler"),
             ILevelEventSchedulerComponent.class
     );
 
