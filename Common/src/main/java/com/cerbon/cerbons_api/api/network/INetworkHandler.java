@@ -1,6 +1,7 @@
 package com.cerbon.cerbons_api.api.network;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
@@ -19,7 +20,7 @@ public interface INetworkHandler {
      * @param packet the packet
      * @param <T>    The type
      */
-    <T> void sendToServer(T packet);
+    <T extends CustomPacketPayload> void sendToServer(T packet);
 
     /**
      * Sends the packet to the server. Can ignore the check if the server has the packet registered.
@@ -29,7 +30,7 @@ public interface INetworkHandler {
      * @param ignoreCheck ignore the check if the server has the packet registered.
      * @param <T>         The type
      */
-    <T> void sendToServer(T packet, boolean ignoreCheck);
+    <T extends CustomPacketPayload> void sendToServer(T packet, boolean ignoreCheck);
 
     /**
      * Sends the packet to the client player, only if the player has the packet registered.
@@ -38,7 +39,7 @@ public interface INetworkHandler {
      * @param player the player
      * @param <T>    The type
      */
-    <T> void sendToClient(T packet, ServerPlayer player);
+    <T extends CustomPacketPayload> void sendToClient(T packet, ServerPlayer player);
 
     /**
      * Sends the packet to the client players, only if the players has the packet registered.
@@ -47,7 +48,7 @@ public interface INetworkHandler {
      * @param players the players
      * @param <T>     The type
      */
-    default <T> void sendToClients(T packet, List<ServerPlayer> players) {
+    default <T extends CustomPacketPayload> void sendToClients(T packet, List<ServerPlayer> players) {
         for (ServerPlayer player : players)
             sendToClient(packet, player);
     }
@@ -59,7 +60,7 @@ public interface INetworkHandler {
      * @param server the server
      * @param <T>    The type
      */
-    default <T> void sendToAllClients(T packet, MinecraftServer server) {
+    default <T extends CustomPacketPayload> void sendToAllClients(T packet, MinecraftServer server) {
         sendToClients(packet, server.getPlayerList().getPlayers());
     }
 
@@ -70,7 +71,7 @@ public interface INetworkHandler {
      * @param level  the level
      * @param <T>    The type
      */
-    default <T> void sendToClientsInLevel(T packet, ServerLevel level) {
+    default <T extends CustomPacketPayload> void sendToClientsInLevel(T packet, ServerLevel level) {
         sendToClients(packet, level.players());
     }
 
@@ -81,7 +82,7 @@ public interface INetworkHandler {
      * @param chunk  the chunk
      * @param <T>    The type
      */
-    default <T> void sendToClientsLoadingChunk(T packet, LevelChunk chunk) {
+    default <T extends CustomPacketPayload> void sendToClientsLoadingChunk(T packet, LevelChunk chunk) {
         ServerChunkCache chunkCache = (ServerChunkCache) chunk.getLevel().getChunkSource();
         sendToClients(packet, chunkCache.chunkMap.getPlayers(chunk.getPos(), false));
     }
@@ -95,7 +96,7 @@ public interface INetworkHandler {
      * @param pos    the chunkpos
      * @param <T>    The type
      */
-    default <T> void sendToClientsLoadingPos(T packet, ServerLevel level, ChunkPos pos) {
+    default <T extends CustomPacketPayload> void sendToClientsLoadingPos(T packet, ServerLevel level, ChunkPos pos) {
         sendToClientsLoadingChunk(packet, level.getChunk(pos.x, pos.z));
     }
 
@@ -107,7 +108,7 @@ public interface INetworkHandler {
      * @param pos    the blockpos
      * @param <T>    The type
      */
-    default <T> void sendToClientsLoadingPos(T packet, ServerLevel level, BlockPos pos) {
+    default <T extends CustomPacketPayload> void sendToClientsLoadingPos(T packet, ServerLevel level, BlockPos pos) {
         sendToClientsLoadingPos(packet, level, new ChunkPos(pos));
     }
 
@@ -119,7 +120,7 @@ public interface INetworkHandler {
      * @param pos    the vec3 pos
      * @param <T>    The type
      */
-    default <T> void sendToClientsLoadingPos(T packet, ServerLevel level, Vec3 pos) {
+    default <T extends CustomPacketPayload> void sendToClientsLoadingPos(T packet, ServerLevel level, Vec3 pos) {
         sendToClientsLoadingPos(packet, level, BlockPos.containing(pos));
     }
 
@@ -132,7 +133,7 @@ public interface INetworkHandler {
      * @param range  the range
      * @param <T>    The type
      */
-    default <T> void sendToClientsInRange(T packet, ServerLevel level, BlockPos pos, double range) {
+    default <T extends CustomPacketPayload> void sendToClientsInRange(T packet, ServerLevel level, BlockPos pos, double range) {
         for (ServerPlayer player : level.players())
             if (player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= range * range)
                 sendToClient(packet, player);
