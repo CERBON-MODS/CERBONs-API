@@ -15,7 +15,7 @@ public class LevelEventScheduler extends SavedData {
     private EventScheduler eventScheduler;
 
     public LevelEventScheduler() {
-        this(new CompoundTag());
+        this(new CompoundTag(), null);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class LevelEventScheduler extends SavedData {
         return tag;
     }
 
-    public LevelEventScheduler(CompoundTag tag) {}
+    public LevelEventScheduler(CompoundTag tag, HolderLookup.Provider provider) {}
 
     public static EventScheduler get(Level level) {
         LevelEventScheduler levelEventScheduler = getSavedData(level);

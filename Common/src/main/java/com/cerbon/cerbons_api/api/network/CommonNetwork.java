@@ -2,11 +2,10 @@ package com.cerbon.cerbons_api.api.network;
 
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public record CommonNetwork(PacketRegistrationHandler packetRegistration) {
     private static DelayedPacketRegistrationHandler delayedHandler;
@@ -30,10 +29,11 @@ public record CommonNetwork(PacketRegistrationHandler packetRegistration) {
         return delayedHandler;
     }
 
-    public static <T> IPacketRegistrar registerPacket(ResourceLocation packetIdentifier, Class<T> messageType, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, Consumer<PacketContext<T>> handler) {
-        if (INSTANCE != null)
-            return INSTANCE.packetRegistration.registerPacket(packetIdentifier, messageType, encoder, decoder, handler);
-
-        return getDelayedHandler().registerPacket(packetIdentifier, messageType, encoder, decoder, handler);
+    public static <T> IPacketRegistrar registerPacket(CustomPacketPayload.Type<? extends CustomPacketPayload> type, Class<T> packetClass, StreamCodec<? extends FriendlyByteBuf, T> codec, Consumer<PacketContext<T>> handler) {
+        if (INSTANCE != null) {
+            return INSTANCE.packetRegistration.registerPacket(type, packetClass, codec, handler);
+        }
+        else
+            return getDelayedHandler().registerPacket(type, packetClass, codec, handler);
     }
 }

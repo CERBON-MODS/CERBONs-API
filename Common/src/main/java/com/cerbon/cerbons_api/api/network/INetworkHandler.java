@@ -19,7 +19,9 @@ public interface INetworkHandler {
      * @param packet the packet
      * @param <T>    The type
      */
-    <T> void sendToServer(T packet);
+    default <T> void sendToServer(T packet) {
+        sendToServer(packet, false);
+    }
 
     /**
      * Sends the packet to the server. Can ignore the check if the server has the packet registered.
@@ -36,9 +38,10 @@ public interface INetworkHandler {
      *
      * @param packet the packet
      * @param player the player
+     * @param ignoreCheck - ignore the check if the client has the packet registered.
      * @param <T>    The type
      */
-    <T> void sendToClient(T packet, ServerPlayer player);
+    <T> void sendToClient(T packet, ServerPlayer player, boolean ignoreCheck);
 
     /**
      * Sends the packet to the client players, only if the players has the packet registered.
@@ -49,7 +52,7 @@ public interface INetworkHandler {
      */
     default <T> void sendToClients(T packet, List<ServerPlayer> players) {
         for (ServerPlayer player : players)
-            sendToClient(packet, player);
+            sendToClient(packet, player, false);
     }
 
     /**
@@ -135,6 +138,6 @@ public interface INetworkHandler {
     default <T> void sendToClientsInRange(T packet, ServerLevel level, BlockPos pos, double range) {
         for (ServerPlayer player : level.players())
             if (player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= range * range)
-                sendToClient(packet, player);
+                sendToClient(packet, player, false);
     }
 }

@@ -1,80 +1,70 @@
 package com.cerbon.cerbons_api.fabric.network;
 
 import com.cerbon.cerbons_api.api.network.PacketRegistrationHandler;
+import com.cerbon.cerbons_api.api.network.data.CommonPacketWrapper;
 import com.cerbon.cerbons_api.api.network.data.PacketContainer;
 import com.cerbon.cerbons_api.api.network.data.PacketContext;
 import com.cerbon.cerbons_api.api.network.data.Side;
+import com.cerbon.cerbons_api.api.network.exceptions.RegistrationException;
 import com.cerbon.cerbons_api.util.Constants;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
-
 public class FabricNetworkHandler extends PacketRegistrationHandler {
-    private final Map<Class<?>, Message<?>> CHANNELS = new HashMap<>();
 
     public FabricNetworkHandler(Side side) {
         super(side);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
     protected <T> void registerPacket(PacketContainer<T> container) {
-        if (CHANNELS.get(container.messageType()) == null) {
-            CHANNELS.put(container.messageType(), new Message<>(container.packetIdentifier(), container.encoder()));
-            if (Side.CLIENT.equals(this.side)) {
-                Constants.LOGGER.debug("Registering packet {} : {} on the: {}", container.packetIdentifier(), container.messageType(), Side.CLIENT);
-
-                ClientPlayNetworking.registerGlobalReceiver(new CustomPacketPayload.Type<>(container.packetIdentifier()), (CustomPacketPayload payload, ClientPlayNetworking.Context context) -> {
-                    buf.readByte(); // handle forge discriminator
-                    T message = container.decoder().apply(buf);
-                    context.client().execute(() -> container.handler().accept(new PacketContext<>(message, Side.CLIENT)));
-                });
-            }
-            else {
-                Constants.LOGGER.debug("Registering packet {} : {} on the: {}", container.packetIdentifier(), container.messageType(), Side.SERVER);
-
-                ServerPlayNetworking.registerGlobalReceiver(container.packetIdentifier(), ((server, player, listener, buf, responseSender) -> {
-                    buf.readByte(); // handle forge discriminator
-                    T message = container.decoder().apply(buf);
-                    server.execute(() -> container.handler().accept(new PacketContext<>(player, message, Side.SERVER)));
-                }));
-            }
+        try {
+            PayloadTypeRegistry.playC2S().register(container.getType(), container.getCodec());
+            PayloadTypeRegistry.playS2C().register(container.getType(), container.getCodec());
         }
+        catch (IllegalArgumentException e) {
+            // do nothing
+        }
+
+        if (Side.CLIENT.equals(this.side)) {
+            Constants.LOGGER.info("Registering packet {} : {} on the: {}", container.type().id(), container.classType(), Side.CLIENT);
+
+            ClientPlayNetworking.registerGlobalReceiver(container.getType(),
+                    (ClientPlayNetworking.PlayPayloadHandler<CommonPacketWrapper<T>>) (payload, context) -> context.client().execute(() ->
+                            container.handler().accept(
+                                    new PacketContext<>(payload.packet(), Side.CLIENT))));
+        }
+
+        Constants.LOGGER.info("Registering packet {} : {} on the: {}", container.type().id(), container.classType(), Side.SERVER);
+        ServerPlayNetworking.registerGlobalReceiver(container.getType(),
+                (ServerPlayNetworking.PlayPayloadHandler<CommonPacketWrapper<T>>) (payload, context) -> context.player().server.execute(() ->
+                        container.handler().accept(
+                                new PacketContext<>(context.player(), payload.packet(), Side.SERVER))));
+
     }
 
-    @Override
-    public <T> void sendToServer(T packet) {
-        this.sendToServer(packet, false);
-    }
-
-    @Override
+    @SuppressWarnings("unchecked")
     public <T> void sendToServer(T packet, boolean ignoreCheck) {
-        Message<T> message = (Message<T>) CHANNELS.get(packet.getClass());
-        if (ClientPlayNetworking.canSend(message.id()) || ignoreCheck) {
-            FriendlyByteBuf buf = PacketByteBufs.create();
-            buf.writeByte(0); // handle forge discriminator
-            message.encoder().accept(packet, buf);
-            ClientPlayNetworking.send(message.id(), buf);
+        PacketContainer<T> container = (PacketContainer<T>) PACKET_MAP.get(packet.getClass());
+        if (container != null) {
+            if (ignoreCheck || ClientPlayNetworking.canSend(container.type().id()))
+                ClientPlayNetworking.send(new CommonPacketWrapper<>(container, packet));
         }
+        else
+            throw new RegistrationException(packet.getClass() + "{} packet not registered on the client, packets need to be registered on both sides!");
+
     }
 
-    @Override
-    public <T> void sendToClient(T packet, ServerPlayer player) {
-        Message<T> message = (Message<T>) CHANNELS.get(packet.getClass());
-        if (ServerPlayNetworking.canSend(player, message.id())) {
-            FriendlyByteBuf buf = PacketByteBufs.create();
-            buf.writeByte(0); // handle forge discriminator
-            message.encoder().accept(packet, buf);
-            ServerPlayNetworking.send(player, message.id(), buf);
+    @SuppressWarnings("unchecked")
+    public <T> void sendToClient(T packet, ServerPlayer player, boolean ignoreCheck) {
+        PacketContainer<T> container = (PacketContainer<T>) PACKET_MAP.get(packet.getClass());
+        if (container != null) {
+            if (ignoreCheck || ServerPlayNetworking.canSend(player, container.type().id()))
+                ServerPlayNetworking.send(player, new CommonPacketWrapper<>(container, packet));
         }
+        else
+            throw new RegistrationException(packet.getClass() + "{} packet not registered on the server, packets need to be registered on both sides!");
     }
-
-    public record Message<T>(ResourceLocation id, BiConsumer<T, FriendlyByteBuf> encoder) {}
 }

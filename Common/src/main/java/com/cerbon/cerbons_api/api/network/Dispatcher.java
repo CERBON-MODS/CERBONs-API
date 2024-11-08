@@ -43,7 +43,7 @@ public class Dispatcher {
      * @param <T>    The type
      */
     public static <T> void sendToClient(T packet, ServerPlayer player) {
-        Network.getNetworkHandler().sendToClient(packet, player);
+        Network.getNetworkHandler().sendToClient(packet, player, false);
     }
 
     /**
