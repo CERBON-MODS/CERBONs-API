@@ -29,10 +29,10 @@ public class Geometries {
         Quaternionf quaternion2 = camera.rotation();
 
         Vector3f[] vector3fs = {
-                new Vector3f(-1.0f, -1.0f, 0.0f),
-                new Vector3f(-1.0f, 1.0f, 0.0f),
+                new Vector3f(1.0f, -1.0f, 0.0f),
                 new Vector3f(1.0f, 1.0f, 0.0f),
-                new Vector3f(1.0f, -1.0f, 0.0f)
+                new Vector3f(-1.0f, 1.0f, 0.0f),
+                new Vector3f(-1.0f, -1.0f, 0.0f)
         };
 
         for (int k = 0; k <= 3; k++) {
