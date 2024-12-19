@@ -17,7 +17,6 @@ public class NeoForgeEvents {
 
     @SubscribeEvent
     public static void onLevelTick(LevelTickEvent.Post event) {
-        if (event.getLevel().getGameTime() % 2 == 0)
-            LevelEventScheduler.get(event.getLevel()).updateEvents();
+        LevelEventScheduler.get(event.getLevel()).updateEvents();
     }
 }
