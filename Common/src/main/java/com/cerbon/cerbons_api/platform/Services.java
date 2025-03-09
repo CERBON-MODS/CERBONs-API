@@ -1,6 +1,7 @@
 package com.cerbon.cerbons_api.platform;
 
 import com.cerbon.cerbons_api.platform.services.ICapabilityHelper;
+import com.cerbon.cerbons_api.platform.services.IMenuTypeHelper;
 import com.cerbon.cerbons_api.platform.services.IPlatformHelper;
 import com.cerbon.cerbons_api.platform.services.IRegistryHelper;
 import com.cerbon.cerbons_api.util.Constants;
@@ -11,6 +12,7 @@ public class Services {
     public static final IPlatformHelper PLATFORM = load(IPlatformHelper.class);
     public static final IRegistryHelper PLATFORM_REGISTRY = load(IRegistryHelper.class);
     public static final ICapabilityHelper PLATFORM_CAPABILITY = load(ICapabilityHelper.class);
+    public static final IMenuTypeHelper PLATFORM_MENU_TYPE = load(IMenuTypeHelper.class);
 
     public static <T> T load(Class<T> clazz) {
         final T loadedService = ServiceLoader.load(clazz)
