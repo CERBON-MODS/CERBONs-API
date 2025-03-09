@@ -21,6 +21,11 @@ public class HistoricalData<T> implements List<T> {
         this.history.add(initialValue);
     }
 
+    public HistoricalData(int maxHistory) {
+        this.maxHistory = maxHistory;
+        this.history = new ArrayList<>();
+    }
+
     @Override
     public int size() {
         return history.size();
@@ -66,7 +71,7 @@ public class HistoricalData<T> implements List<T> {
     public boolean add(T value) {
         history.add(value);
         if (history.size() > maxHistory)
-            history.remove(0);
+            history.removeFirst();
         return true;
     }
 
