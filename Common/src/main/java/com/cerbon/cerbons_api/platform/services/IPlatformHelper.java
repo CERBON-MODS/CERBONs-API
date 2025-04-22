@@ -24,6 +24,8 @@ public interface IPlatformHelper {
      */
     boolean isDevelopmentEnvironment();
 
+    boolean isClientDist();
+
     /**
      * Gets the name of the environment type as a string.
      *
