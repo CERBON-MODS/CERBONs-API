@@ -46,7 +46,7 @@ public class MiscUtils {
      * Check if we are running the client distribution.
      * @return True if in client dist, false otherwise.
      */
-    public boolean isClientDist() {
+    public static boolean isClientDist() {
         return Services.PLATFORM.isClientDist();
     };
 
