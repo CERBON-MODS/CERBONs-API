@@ -3,12 +3,20 @@ package com.cerbon.cerbons_api.forge.platform;
 import com.cerbon.cerbons_api.platform.services.IPlatformHelper;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.loading.FMLPaths;
+
+import java.nio.file.Path;
 
 public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public String getPlatformName() {
         return "Forge";
+    }
+
+    @Override
+    public Path getConfigDir() {
+        return FMLPaths.CONFIGDIR.get();
     }
 
     @Override

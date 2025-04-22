@@ -1,5 +1,7 @@
 package com.cerbon.cerbons_api.platform.services;
 
+import java.nio.file.Path;
+
 public interface IPlatformHelper {
 
     /**
@@ -8,6 +10,12 @@ public interface IPlatformHelper {
      * @return The name of the current platform.
      */
     String getPlatformName();
+
+    /**
+     * Get the current directory for game configuration files.
+     * @return the configuration directory.
+     */
+    Path getConfigDir();
 
     /**
      * Checks if a mod with the given id is loaded.
