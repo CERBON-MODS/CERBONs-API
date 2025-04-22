@@ -2,6 +2,8 @@ package com.cerbon.cerbons_api.api.static_utilities;
 
 import com.cerbon.cerbons_api.platform.Services;
 
+import java.nio.file.Path;
+
 public class MiscUtils {
 
     /**
@@ -11,6 +13,14 @@ public class MiscUtils {
      */
     public static String getPlatformName() {
         return Services.PLATFORM.getPlatformName();
+    }
+
+    /**
+     * Get the current directory for game configuration files.
+     * @return the configuration directory.
+     */
+    public static Path getConfigDir() {
+        return Services.PLATFORM.getConfigDir();
     }
 
     /**
@@ -31,6 +41,14 @@ public class MiscUtils {
     public static boolean isDevelopmentEnvironment() {
         return Services.PLATFORM.isDevelopmentEnvironment();
     }
+
+    /**
+     * Check if we are running the client distribution.
+     * @return True if in client dist, false otherwise.
+     */
+    public boolean isClientDist() {
+        return Services.PLATFORM.isClientDist();
+    };
 
     /**
      * Gets the name of the environment type as a string.
