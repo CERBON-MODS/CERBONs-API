@@ -24,6 +24,10 @@ public interface IPlatformHelper {
      */
     boolean isDevelopmentEnvironment();
 
+    /**
+     * Check if we are running the client distribution.
+     * @return True if in client dist, false otherwise.
+     */
     boolean isClientDist();
 
     /**
