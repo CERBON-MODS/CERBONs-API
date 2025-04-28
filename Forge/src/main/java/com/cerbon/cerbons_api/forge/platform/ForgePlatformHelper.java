@@ -1,6 +1,7 @@
 package com.cerbon.cerbons_api.forge.platform;
 
 import com.cerbon.cerbons_api.platform.services.IPlatformHelper;
+import net.minecraftforge.data.loading.DatagenModLoader;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -27,6 +28,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public boolean isClientDist() {
         return FMLLoader.getDist().isClient();
+    }
+
+    @Override
+    public boolean isRunningDataGen() {
+        return DatagenModLoader.isRunningDataGen();
     }
 
     @Override

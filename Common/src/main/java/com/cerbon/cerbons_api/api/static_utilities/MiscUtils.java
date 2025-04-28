@@ -48,7 +48,15 @@ public class MiscUtils {
      */
     public static boolean isClientDist() {
         return Services.PLATFORM.isClientDist();
-    };
+    }
+
+    /**
+     * Check if we are running data generation
+     * @return True if running data generation, false otherwise
+     */
+    public static boolean isRunningDatagen() {
+        return Services.PLATFORM.isRunningDataGen();
+    }
 
     /**
      * Gets the name of the environment type as a string.

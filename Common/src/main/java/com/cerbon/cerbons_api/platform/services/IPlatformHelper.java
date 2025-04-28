@@ -39,6 +39,12 @@ public interface IPlatformHelper {
     boolean isClientDist();
 
     /**
+     * Check if we are running data generation
+     * @return True if running data generation, false otherwise
+     */
+    boolean isRunningDataGen();
+
+    /**
      * Gets the name of the environment type as a string.
      *
      * @return The name of the environment type.
