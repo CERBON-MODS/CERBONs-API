@@ -1,14 +1,15 @@
-package com.cerbon.cerbons_api.api.registry.custom;
+package com.cerbon.cerbons_api.api.item.registry;
 
+import com.cerbon.cerbons_api.api.item.enums.ToolType;
 import com.cerbon.cerbons_api.api.registry.RegistryEntry;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistries;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Collection;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 public class ItemRegistry {
@@ -16,6 +17,20 @@ public class ItemRegistry {
 
     public ItemRegistry(String modId) {
         this.itemRegistry = ResourcefulRegistries.create(BuiltInRegistries.ITEM, modId);
+    }
+
+    public RegistryEntry<TieredItem> registerTool(ToolType toolType, Tier tier, float attackDamage, float attackSpeed, String id) {
+        return registerTool(toolType, tier, properties -> properties, attackDamage, attackSpeed, id);
+    }
+
+    public RegistryEntry<TieredItem> registerTool(ToolType toolType, Tier tier, UnaryOperator<Item.Properties> itemProperties, float attackDamage, float attackSpeed, String id) {
+        return switch (toolType) {
+            case SWORD -> registerItem(new SwordItem(tier, itemProperties.apply(new Item.Properties().attributes(SwordItem.createAttributes(tier, (int) attackDamage, attackSpeed)))), id);
+            case PICKAXE -> registerItem(new PickaxeItem(tier, itemProperties.apply(new Item.Properties().attributes(PickaxeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
+            case AXE -> registerItem(new AxeItem(tier, itemProperties.apply(new Item.Properties().attributes(AxeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
+            case SHOVEL -> registerItem(new ShovelItem(tier, itemProperties.apply(new Item.Properties().attributes(ShovelItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
+            case HOE -> registerItem(new HoeItem(tier, itemProperties.apply(new Item.Properties().attributes(HoeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
+        };
     }
 
     public RegistryEntry<BlockItem> registerBlockItem(Block block) {
