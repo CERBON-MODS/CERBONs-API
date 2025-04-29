@@ -46,7 +46,7 @@ public class ItemRegistry {
     }
 
     public RegistryEntry<ArmorItem> registerArmor(ArmorItem.Type armorType, Holder<ArmorMaterial> material, UnaryOperator<Item.Properties> itemProperties, int durabilityFactor) {
-        String materialName = material.unwrapKey().map(resourceKey -> resourceKey.location().getPath()).orElse("[unregistered]");
+        String materialName = material.unwrapKey().map(resourceKey -> resourceKey.location().getPath()).orElseThrow();
         return registerItem(new ArmorItem(material, armorType, itemProperties.apply(new Item.Properties().durability(armorType.getDurability(durabilityFactor)))), materialName + "_" + armorType.getSerializedName());
     }
 
