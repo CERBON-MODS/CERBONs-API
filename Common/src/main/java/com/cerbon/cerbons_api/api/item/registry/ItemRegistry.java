@@ -12,6 +12,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
@@ -23,21 +24,28 @@ public class ItemRegistry {
         this.itemRegistry = ResourcefulRegistries.create(BuiltInRegistries.ITEM, modId);
     }
 
-    public Map<ArmorItem.Type, RegistryEntry<ArmorItem>> registerFullArmorSet(Holder<ArmorMaterial> material, int... durabilityFactors) {
+    public Map<ArmorItem.Type, RegistryEntry<ArmorItem>> registerFullArmorSet(Holder<ArmorMaterial> material, int durabilityFactor) {
+        return registerFullArmorSet(
+                material,
+                List.of(durabilityFactor, durabilityFactor, durabilityFactor, durabilityFactor)
+        );
+    }
+
+    public Map<ArmorItem.Type, RegistryEntry<ArmorItem>> registerFullArmorSet(Holder<ArmorMaterial> material, List<Integer> durabilityFactors) {
         return registerFullArmorSet(material, properties -> properties, durabilityFactors);
     }
 
-    public Map<ArmorItem.Type, RegistryEntry<ArmorItem>> registerFullArmorSet(Holder<ArmorMaterial> material, UnaryOperator<Item.Properties> itemProperties, int... durabilityFactors) {
+    public Map<ArmorItem.Type, RegistryEntry<ArmorItem>> registerFullArmorSet(Holder<ArmorMaterial> material, UnaryOperator<Item.Properties> itemProperties, List<Integer> durabilityFactors) {
         Preconditions.checkArgument(
-                durabilityFactors != null && durabilityFactors.length == 4,
+                durabilityFactors != null && durabilityFactors.size() == 4,
                 "Expected durability array of length 4 (helmet, chest, legs, boots)"
         );
 
         return ImmutableMap.of(
-                ArmorItem.Type.HELMET, registerArmor(ArmorItem.Type.HELMET, material, itemProperties, durabilityFactors[0]),
-                ArmorItem.Type.CHESTPLATE, registerArmor(ArmorItem.Type.CHESTPLATE, material, itemProperties, durabilityFactors[1]),
-                ArmorItem.Type.LEGGINGS, registerArmor(ArmorItem.Type.LEGGINGS, material, itemProperties, durabilityFactors[2]),
-                ArmorItem.Type.BOOTS, registerArmor(ArmorItem.Type.BOOTS, material, itemProperties, durabilityFactors[3])
+                ArmorItem.Type.HELMET, registerArmor(ArmorItem.Type.HELMET, material, itemProperties, durabilityFactors.get(0)),
+                ArmorItem.Type.CHESTPLATE, registerArmor(ArmorItem.Type.CHESTPLATE, material, itemProperties, durabilityFactors.get(1)),
+                ArmorItem.Type.LEGGINGS, registerArmor(ArmorItem.Type.LEGGINGS, material, itemProperties, durabilityFactors.get(2)),
+                ArmorItem.Type.BOOTS, registerArmor(ArmorItem.Type.BOOTS, material, itemProperties, durabilityFactors.get(3))
         );
     }
 
