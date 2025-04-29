@@ -58,11 +58,11 @@ public class ItemRegistry {
         return registerItem(new ArmorItem(material, armorType, itemProperties.apply(new Item.Properties().durability(armorType.getDurability(durabilityFactor)))), materialName + "_" + armorType.getSerializedName());
     }
 
-    public RegistryEntry<TieredItem> registerTool(ToolType toolType, Tier tier, float attackDamage, float attackSpeed, String id) {
-        return registerTool(toolType, tier, properties -> properties, attackDamage, attackSpeed, id);
+    public RegistryEntry<TieredItem> registerSimpleTool(ToolType toolType, Tier tier, float attackDamage, float attackSpeed, String id) {
+        return registerSimpleTool(toolType, tier, properties -> properties, attackDamage, attackSpeed, id);
     }
 
-    public RegistryEntry<TieredItem> registerTool(ToolType toolType, Tier tier, UnaryOperator<Item.Properties> itemProperties, float attackDamage, float attackSpeed, String id) {
+    public RegistryEntry<TieredItem> registerSimpleTool(ToolType toolType, Tier tier, UnaryOperator<Item.Properties> itemProperties, float attackDamage, float attackSpeed, String id) {
         return switch (toolType) {
             case SWORD -> registerItem(new SwordItem(tier, itemProperties.apply(new Item.Properties().attributes(SwordItem.createAttributes(tier, (int) attackDamage, attackSpeed)))), id);
             case PICKAXE -> registerItem(new PickaxeItem(tier, itemProperties.apply(new Item.Properties().attributes(PickaxeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
