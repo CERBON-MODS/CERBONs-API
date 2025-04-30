@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
@@ -56,7 +57,7 @@ public class ItemRegistry {
 
     public RegistryEntry<ArmorItem> registerArmor(ArmorItem.Type armorType, Holder<ArmorMaterial> material, UnaryOperator<Item.Properties> itemProperties, int durabilityFactor) {
         String materialName = material.unwrapKey().map(resourceKey -> resourceKey.location().getPath()).orElseThrow();
-        return registerItem(new ArmorItem(material, armorType, itemProperties.apply(new Item.Properties().durability(armorType.getDurability(durabilityFactor)))), materialName + "_" + armorType.getSerializedName());
+        return registerItem(() -> new ArmorItem(material, armorType, itemProperties.apply(new Item.Properties().durability(armorType.getDurability(durabilityFactor)))), materialName + "_" + armorType.getSerializedName());
     }
 
     public RegistryEntry<TieredItem> registerSimpleTool(ToolType toolType, Tier tier, float attackDamage, float attackSpeed, String id) {
@@ -65,11 +66,11 @@ public class ItemRegistry {
 
     public RegistryEntry<TieredItem> registerSimpleTool(ToolType toolType, Tier tier, UnaryOperator<Item.Properties> itemProperties, float attackDamage, float attackSpeed, String id) {
         return switch (toolType) {
-            case SWORD -> registerItem(new SwordItem(tier, itemProperties.apply(new Item.Properties().attributes(SwordItem.createAttributes(tier, (int) attackDamage, attackSpeed)))), id);
-            case PICKAXE -> registerItem(new PickaxeItem(tier, itemProperties.apply(new Item.Properties().attributes(PickaxeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
-            case AXE -> registerItem(new AxeItem(tier, itemProperties.apply(new Item.Properties().attributes(AxeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
-            case SHOVEL -> registerItem(new ShovelItem(tier, itemProperties.apply(new Item.Properties().attributes(ShovelItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
-            case HOE -> registerItem(new HoeItem(tier, itemProperties.apply(new Item.Properties().attributes(HoeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
+            case SWORD -> registerItem(() -> new SwordItem(tier, itemProperties.apply(new Item.Properties().attributes(SwordItem.createAttributes(tier, (int) attackDamage, attackSpeed)))), id);
+            case PICKAXE -> registerItem(() -> new PickaxeItem(tier, itemProperties.apply(new Item.Properties().attributes(PickaxeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
+            case AXE -> registerItem(() -> new AxeItem(tier, itemProperties.apply(new Item.Properties().attributes(AxeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
+            case SHOVEL -> registerItem(() -> new ShovelItem(tier, itemProperties.apply(new Item.Properties().attributes(ShovelItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
+            case HOE -> registerItem(() -> new HoeItem(tier, itemProperties.apply(new Item.Properties().attributes(HoeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
         };
     }
 
@@ -81,16 +82,16 @@ public class ItemRegistry {
         return registerItem(itemProperties.apply(new Item.Properties().food(foodProperties)), id);
     }
 
-    public RegistryEntry<BlockItem> registerBlockItem(Block block) {
-        return registerBlockItem(block, new Item.Properties());
+    public RegistryEntry<BlockItem> registerBlockItem(Supplier<Block> block, String id) {
+        return registerBlockItem(block, new Item.Properties(), id);
     }
 
-    public RegistryEntry<BlockItem> registerBlockItem(Block block, Item.Properties itemProperties) {
-        return registerBlockItem(new BlockItem(block, itemProperties));
+    public RegistryEntry<BlockItem> registerBlockItem(Supplier<Block> block, Item.Properties itemProperties, String id) {
+        return registerBlockItem(id, () -> new BlockItem(block.get(), itemProperties));
     }
 
-    public RegistryEntry<BlockItem> registerBlockItem(BlockItem blockItem) {
-        return registerItem(blockItem, BuiltInRegistries.BLOCK.getKey(blockItem.getBlock()).getPath());
+    public RegistryEntry<BlockItem> registerBlockItem(String id, Supplier<BlockItem> blockItem) {
+        return registerItem(blockItem, id);
     }
 
     public RegistryEntry<Item> registerItem(String id) {
@@ -98,11 +99,11 @@ public class ItemRegistry {
     }
 
     public RegistryEntry<Item> registerItem(Item.Properties itemProperties, String id) {
-        return registerItem(new Item(itemProperties), id);
+        return registerItem(() -> new Item(itemProperties), id);
     }
 
-    public <T extends Item> RegistryEntry<T> registerItem(T item, String id) {
-        return itemRegistry.register(id, () -> item);
+    public <T extends Item> RegistryEntry<T> registerItem(Supplier<T> item, String id) {
+        return itemRegistry.register(id, item);
     }
 
     public Collection<RegistryEntry<Item>> getEntries() { return itemRegistry.getEntries(); }

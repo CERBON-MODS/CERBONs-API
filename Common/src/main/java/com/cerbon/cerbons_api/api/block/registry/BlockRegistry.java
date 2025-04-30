@@ -10,20 +10,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.Collection;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class BlockRegistry {
     private final ResourcefulRegistry<Block> blockRegistry;
-    private final ItemRegistry itemRegistry;
+    private final Supplier<ItemRegistry> itemRegistry;
 
-    private boolean registerItemRegistry = false;
-
-    public BlockRegistry(String modId) {
-        this(modId, new ItemRegistry(modId));
-        this.registerItemRegistry = true;
-    }
-
-    public BlockRegistry(String modId, ItemRegistry itemRegistry) {
+    public BlockRegistry(String modId, Supplier<ItemRegistry> itemRegistry) {
         this.blockRegistry = ResourcefulRegistries.create(BuiltInRegistries.BLOCK, modId);
         this.itemRegistry = itemRegistry;
     }
@@ -37,21 +31,21 @@ public class BlockRegistry {
     }
 
     public RegistryEntry<Block> registerBlockWithItem(BlockBehaviour.Properties blockProperties, Item.Properties itemProperties, String id) {
-        Block block = new Block(blockProperties);
+        Supplier<Block> block = () -> new Block(blockProperties);
         RegistryEntry<Block> blockEntry = registerBlock(block, id);
-        itemRegistry.registerBlockItem(block, itemProperties);
+        itemRegistry.get().registerBlockItem(blockEntry, itemProperties, id);
         return blockEntry;
     }
 
-    public RegistryEntry<Block> registerBlockWithItem(Block block, Item.Properties itemProperties, String id) {
+    public RegistryEntry<Block> registerBlockWithItem(Supplier<Block> block, Item.Properties itemProperties, String id) {
         RegistryEntry<Block> blockEntry = registerBlock(block, id);
-        itemRegistry.registerBlockItem(block, itemProperties);
+        itemRegistry.get().registerBlockItem(blockEntry, itemProperties, id);
         return blockEntry;
     }
 
-    public RegistryEntry<Block> registerBlockWithItem(Block block, String id) {
+    public RegistryEntry<Block> registerBlockWithItem(Supplier<Block> block, String id) {
         RegistryEntry<Block> blockEntry = registerBlock(block, id);
-        itemRegistry.registerBlockItem(block);
+        itemRegistry.get().registerBlockItem(blockEntry, id);
         return blockEntry;
     }
 
@@ -60,11 +54,11 @@ public class BlockRegistry {
     }
 
     public RegistryEntry<Block> registerBlock(Block.Properties blockProperties, String id) {
-        return registerBlock(new Block(blockProperties), id);
+        return registerBlock(() -> new Block(blockProperties), id);
     }
 
-    public <T extends Block> RegistryEntry<T> registerBlock(T block, String id) {
-        return blockRegistry.register(id, () -> block);
+    public <T extends Block> RegistryEntry<T> registerBlock(Supplier<T> block, String id) {
+        return blockRegistry.register(id, block);
     }
 
     public Collection<RegistryEntry<Block>> getEntries() { return blockRegistry.getEntries(); }
@@ -73,8 +67,5 @@ public class BlockRegistry {
 
     public void register() {
         blockRegistry.register();
-
-        if (registerItemRegistry)
-            itemRegistry.register();
     }
 }
