@@ -8,6 +8,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 
@@ -70,6 +71,14 @@ public class ItemRegistry {
             case SHOVEL -> registerItem(new ShovelItem(tier, itemProperties.apply(new Item.Properties().attributes(ShovelItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
             case HOE -> registerItem(new HoeItem(tier, itemProperties.apply(new Item.Properties().attributes(HoeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
         };
+    }
+
+    public RegistryEntry<Item> registerFood(FoodProperties foodProperties, String id) {
+        return registerFood(foodProperties, properties -> properties, id);
+    }
+
+    public RegistryEntry<Item> registerFood(FoodProperties foodProperties, UnaryOperator<Item.Properties> itemProperties, String id) {
+        return registerItem(itemProperties.apply(new Item.Properties().food(foodProperties)), id);
     }
 
     public RegistryEntry<BlockItem> registerBlockItem(Block block) {
