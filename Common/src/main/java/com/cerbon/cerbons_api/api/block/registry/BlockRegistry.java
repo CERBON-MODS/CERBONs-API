@@ -4,6 +4,7 @@ import com.cerbon.cerbons_api.api.item.registry.ItemRegistry;
 import com.cerbon.cerbons_api.api.registry.RegistryEntry;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistries;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistry;
+import com.google.common.base.Suppliers;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -16,6 +17,13 @@ import java.util.stream.Stream;
 public class BlockRegistry {
     private final ResourcefulRegistry<Block> blockRegistry;
     private final Supplier<ItemRegistry> itemRegistry;
+
+    private boolean registerItemRegistry = false;
+
+    public BlockRegistry(String modId) {
+        this(modId, Suppliers.memoize(() -> new ItemRegistry(modId)));
+        this.registerItemRegistry = true;
+    }
 
     public BlockRegistry(String modId, Supplier<ItemRegistry> itemRegistry) {
         this.blockRegistry = ResourcefulRegistries.create(BuiltInRegistries.BLOCK, modId);
@@ -67,5 +75,8 @@ public class BlockRegistry {
 
     public void register() {
         blockRegistry.register();
+
+        if (registerItemRegistry)
+            itemRegistry.get().register();
     }
 }
