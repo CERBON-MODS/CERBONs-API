@@ -13,6 +13,7 @@
   ],
   "client": [
     "multipart_entities.client.EntityRenderDispatcherMixin",
+    "multipart_entities.client.HitboxRenderStateMixin",
     "multipart_entities.client.MultiplayerGameModeMixin"
   ],
   "injectors": {

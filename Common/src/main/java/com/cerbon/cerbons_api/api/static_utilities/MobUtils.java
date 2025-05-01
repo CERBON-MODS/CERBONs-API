@@ -8,7 +8,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class MobUtils {
     public static void setPos(Entity entity, Vec3 vec) {
-        entity.absMoveTo(vec.x, vec.y, vec.z);
+        entity.absSnapTo(vec.x, vec.y, vec.z);
     }
 
     public static Vec3 eyePos(Entity entity) {

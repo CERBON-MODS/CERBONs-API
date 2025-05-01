@@ -14,11 +14,11 @@ import org.jetbrains.annotations.NotNull;
 public class RegistryUtils {
 
     public static Block getBlockByKey(String key) {
-        return BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(key));
+        return BuiltInRegistries.BLOCK.getValue(ResourceLocation.tryParse(key));
     }
 
     public static Item getItemByKey(String key) {
-        return BuiltInRegistries.ITEM.get(ResourceLocation.tryParse(key));
+        return BuiltInRegistries.ITEM.getValue(ResourceLocation.tryParse(key));
     }
 
     public static @NotNull String getItemKeyAsString(Item item) {
@@ -26,14 +26,14 @@ public class RegistryUtils {
     }
 
     public static MobEffect getMobEffectByKey(String key) {
-        return BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.tryParse(key));
+        return BuiltInRegistries.MOB_EFFECT.getValue(ResourceLocation.tryParse(key));
     }
 
     public static EntityType<?> getEntityTypeByKey(String key) {
-        return BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.tryParse(key));
+        return BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.tryParse(key));
     }
 
     public static Structure getStructureByKey(String key, ServerLevel serverLevel) {
-        return serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE).get(ResourceLocation.tryParse(key));
+        return serverLevel.registryAccess().lookupOrThrow(Registries.STRUCTURE).getValue(ResourceLocation.tryParse(key));
     }
 }

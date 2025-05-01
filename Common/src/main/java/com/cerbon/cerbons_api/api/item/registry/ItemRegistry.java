@@ -4,16 +4,17 @@ import com.cerbon.cerbons_api.api.item.enums.ToolType;
 import com.cerbon.cerbons_api.api.registry.RegistryEntry;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistries;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistry;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -26,51 +27,39 @@ public class ItemRegistry {
         this.itemRegistry = ResourcefulRegistries.create(BuiltInRegistries.ITEM, modId);
     }
 
-    public Map<ArmorItem.Type, RegistryEntry<ArmorItem>> registerFullArmorSet(Holder<ArmorMaterial> material, int durabilityFactor) {
-        return registerFullArmorSet(
-                material,
-                List.of(durabilityFactor, durabilityFactor, durabilityFactor, durabilityFactor)
-        );
+    public Map<ArmorType, RegistryEntry<Item>> registerFullArmorSet(ArmorMaterial material) {
+        return registerFullArmorSet(material, properties -> properties);
     }
 
-    public Map<ArmorItem.Type, RegistryEntry<ArmorItem>> registerFullArmorSet(Holder<ArmorMaterial> material, List<Integer> durabilityFactors) {
-        return registerFullArmorSet(material, properties -> properties, durabilityFactors);
-    }
-
-    public Map<ArmorItem.Type, RegistryEntry<ArmorItem>> registerFullArmorSet(Holder<ArmorMaterial> material, UnaryOperator<Item.Properties> itemProperties, List<Integer> durabilityFactors) {
-        Preconditions.checkArgument(
-                durabilityFactors != null && durabilityFactors.size() == 4,
-                "Expected durability array of length 4 (helmet, chest, legs, boots)"
-        );
-
+    public Map<ArmorType, RegistryEntry<Item>> registerFullArmorSet(ArmorMaterial material, UnaryOperator<Item.Properties> itemProperties) {
         return ImmutableMap.of(
-                ArmorItem.Type.HELMET, registerArmor(ArmorItem.Type.HELMET, material, itemProperties, durabilityFactors.get(0)),
-                ArmorItem.Type.CHESTPLATE, registerArmor(ArmorItem.Type.CHESTPLATE, material, itemProperties, durabilityFactors.get(1)),
-                ArmorItem.Type.LEGGINGS, registerArmor(ArmorItem.Type.LEGGINGS, material, itemProperties, durabilityFactors.get(2)),
-                ArmorItem.Type.BOOTS, registerArmor(ArmorItem.Type.BOOTS, material, itemProperties, durabilityFactors.get(3))
+                ArmorType.HELMET, registerArmor(ArmorType.HELMET, material, itemProperties),
+                ArmorType.CHESTPLATE, registerArmor(ArmorType.CHESTPLATE, material, itemProperties),
+                ArmorType.LEGGINGS, registerArmor(ArmorType.LEGGINGS, material, itemProperties),
+                ArmorType.BOOTS, registerArmor(ArmorType.BOOTS, material, itemProperties)
         );
     }
 
-    public RegistryEntry<ArmorItem> registerArmor(ArmorItem.Type armorType, Holder<ArmorMaterial> material, int durabilityFactor) {
-        return registerArmor(armorType, material, properties -> properties, durabilityFactor);
+    public RegistryEntry<Item> registerArmor(ArmorType armorType, ArmorMaterial material) {
+        return registerArmor(armorType, material, properties -> properties);
     }
 
-    public RegistryEntry<ArmorItem> registerArmor(ArmorItem.Type armorType, Holder<ArmorMaterial> material, UnaryOperator<Item.Properties> itemProperties, int durabilityFactor) {
-        String materialName = material.unwrapKey().map(resourceKey -> resourceKey.location().getPath()).orElseThrow();
-        return registerItem(() -> new ArmorItem(material, armorType, itemProperties.apply(new Item.Properties().durability(armorType.getDurability(durabilityFactor)))), materialName + "_" + armorType.getSerializedName());
+    public RegistryEntry<Item> registerArmor(ArmorType armorType, ArmorMaterial material, UnaryOperator<Item.Properties> itemProperties) {
+        String materialName = material.assetId().location().getPath();
+        return registerItem(itemProperties.apply(new Item.Properties().humanoidArmor(material, armorType)), materialName + "_" + armorType.getSerializedName());
     }
 
-    public RegistryEntry<TieredItem> registerSimpleTool(ToolType toolType, Tier tier, float attackDamage, float attackSpeed, String id) {
-        return registerSimpleTool(toolType, tier, properties -> properties, attackDamage, attackSpeed, id);
+    public RegistryEntry<Item> registerSimpleTool(ToolType toolType, ToolMaterial toolMaterial, float attackDamage, float attackSpeed, String id) {
+        return registerSimpleTool(toolType, toolMaterial, properties -> properties, attackDamage, attackSpeed, id);
     }
 
-    public RegistryEntry<TieredItem> registerSimpleTool(ToolType toolType, Tier tier, UnaryOperator<Item.Properties> itemProperties, float attackDamage, float attackSpeed, String id) {
+    public RegistryEntry<Item> registerSimpleTool(ToolType toolType, ToolMaterial toolMaterial, UnaryOperator<Item.Properties> itemProperties, float attackDamage, float attackSpeed, String id) {
         return switch (toolType) {
-            case SWORD -> registerItem(() -> new SwordItem(tier, itemProperties.apply(new Item.Properties().attributes(SwordItem.createAttributes(tier, (int) attackDamage, attackSpeed)))), id);
-            case PICKAXE -> registerItem(() -> new PickaxeItem(tier, itemProperties.apply(new Item.Properties().attributes(PickaxeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
-            case AXE -> registerItem(() -> new AxeItem(tier, itemProperties.apply(new Item.Properties().attributes(AxeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
-            case SHOVEL -> registerItem(() -> new ShovelItem(tier, itemProperties.apply(new Item.Properties().attributes(ShovelItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
-            case HOE -> registerItem(() -> new HoeItem(tier, itemProperties.apply(new Item.Properties().attributes(HoeItem.createAttributes(tier, attackDamage, attackSpeed)))), id);
+            case SWORD -> registerItem(itemProperties.apply(new Item.Properties().sword(toolMaterial, attackDamage, attackSpeed)), id);
+            case PICKAXE -> registerItem(itemProperties.apply(new Item.Properties().pickaxe(toolMaterial, attackDamage, attackSpeed)), id);
+            case AXE -> registerItem(itemProperties.apply(new Item.Properties().axe(toolMaterial, attackDamage, attackSpeed)), id);
+            case SHOVEL -> registerItem(itemProperties.apply(new Item.Properties().shovel(toolMaterial, attackDamage, attackSpeed)), id);
+            case HOE -> registerItem(itemProperties.apply(new Item.Properties().hoe(toolMaterial, attackDamage, attackSpeed)), id);
         };
     }
 

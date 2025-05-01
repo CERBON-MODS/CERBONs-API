@@ -21,7 +21,7 @@ public class SoundUtils {
     }
 
     public static void playSound(ServerLevel level, Vec3 pos, SoundEvent soundEvent, SoundSource soundSource, float volume, float pitch, double range, Player except) {
-        Holder<SoundEvent> holder = Holder.direct(SoundEvent.createVariableRangeEvent(soundEvent.getLocation()));
+        Holder<SoundEvent> holder = Holder.direct(SoundEvent.createVariableRangeEvent(soundEvent.location()));
         level.getServer().getPlayerList().broadcast(
                 except,
                 pos.x,

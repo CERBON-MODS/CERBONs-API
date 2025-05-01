@@ -33,8 +33,8 @@ public abstract class MultiplayerGameModeMixin {
             ensureHasSentCarriedItem();
 
             Minecraft client = Minecraft.getInstance();
-            final Vec3 pos = client.cameraEntity.getEyePosition(client.getTimer().getGameTimeDeltaTicks());
-            final Vec3 dir = client.cameraEntity.getViewVector(client.getTimer().getGameTimeDeltaTicks());
+            final Vec3 pos = client.cameraEntity.getEyePosition(client.getDeltaTracker().getGameTimeDeltaTicks());
+            final Vec3 dir = client.cameraEntity.getViewVector(client.getDeltaTracker().getGameTimeDeltaTicks());
             final double reach = client.player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE);
             String part = multipartAwareEntity.getBounds().raycast(pos, pos.add(dir.scale(reach)));
             if (part == null) return;
@@ -56,8 +56,8 @@ public abstract class MultiplayerGameModeMixin {
             ensureHasSentCarriedItem();
 
             Minecraft client = Minecraft.getInstance();
-            final Vec3 pos = client.cameraEntity.getEyePosition(client.getTimer().getGameTimeDeltaTicks());
-            final Vec3 dir = client.cameraEntity.getViewVector(client.getTimer().getGameTimeDeltaTicks());
+            final Vec3 pos = client.cameraEntity.getEyePosition(client.getDeltaTracker().getGameTimeDeltaTicks());
+            final Vec3 dir = client.cameraEntity.getViewVector(client.getDeltaTracker().getGameTimeDeltaTicks());
             final double reach = client.player.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE);;
             String part = multipartAwareEntity.getBounds().raycast(pos, pos.add(dir.scale(reach)));
             if (part == null) return;
