@@ -6,6 +6,9 @@ import com.cerbon.cerbons_api.api.registry.ResourcefulRegistries;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistry;
 import com.google.common.base.Suppliers;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -15,6 +18,8 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class BlockRegistry {
+    private final String modId;
+
     private final ResourcefulRegistry<Block> blockRegistry;
     private final Supplier<ItemRegistry> itemRegistry;
 
@@ -26,6 +31,7 @@ public class BlockRegistry {
     }
 
     public BlockRegistry(String modId, Supplier<ItemRegistry> itemRegistry) {
+        this.modId = modId;
         this.blockRegistry = ResourcefulRegistries.create(BuiltInRegistries.BLOCK, modId);
         this.itemRegistry = itemRegistry;
     }
@@ -39,7 +45,7 @@ public class BlockRegistry {
     }
 
     public RegistryEntry<Block> registerBlockWithItem(BlockBehaviour.Properties blockProperties, Item.Properties itemProperties, String id) {
-        Supplier<Block> block = () -> new Block(blockProperties);
+        Supplier<Block> block = () -> new Block(blockProperties.setId(makeId(id)));
         RegistryEntry<Block> blockEntry = registerBlock(block, id);
         itemRegistry.get().registerBlockItem(blockEntry, itemProperties, id);
         return blockEntry;
@@ -62,11 +68,15 @@ public class BlockRegistry {
     }
 
     public RegistryEntry<Block> registerBlock(Block.Properties blockProperties, String id) {
-        return registerBlock(() -> new Block(blockProperties), id);
+        return registerBlock(() -> new Block(blockProperties.setId(makeId(id))), id);
     }
 
     public <T extends Block> RegistryEntry<T> registerBlock(Supplier<T> block, String id) {
         return blockRegistry.register(id, block);
+    }
+
+    public ResourceKey<Block> makeId(String id) {
+        return ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(modId, id));
     }
 
     public Collection<RegistryEntry<Block>> getEntries() { return blockRegistry.getEntries(); }
