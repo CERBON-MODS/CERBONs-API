@@ -56,11 +56,11 @@ public class ItemRegistry {
         return registerItem(() -> new Item(itemProperties.apply(new Item.Properties().humanoidArmor(material, armorType)).setId(makeId(id))), id);
     }
 
-    public RegistryEntry<Item> registerSimpleTool(ToolType toolType, ToolMaterial toolMaterial, float attackDamage, float attackSpeed, String id) {
-        return registerSimpleTool(toolType, toolMaterial, properties -> properties, attackDamage, attackSpeed, id);
+    public RegistryEntry<Item> registerTool(ToolType toolType, ToolMaterial toolMaterial, float attackDamage, float attackSpeed, String id) {
+        return registerTool(toolType, toolMaterial, properties -> properties, attackDamage, attackSpeed, id);
     }
 
-    public RegistryEntry<Item> registerSimpleTool(ToolType toolType, ToolMaterial toolMaterial, UnaryOperator<Item.Properties> itemProperties, float attackDamage, float attackSpeed, String id) {
+    public RegistryEntry<Item> registerTool(ToolType toolType, ToolMaterial toolMaterial, UnaryOperator<Item.Properties> itemProperties, float attackDamage, float attackSpeed, String id) {
         return switch (toolType) {
             case SWORD -> registerItem(() -> new Item(itemProperties.apply(new Item.Properties().sword(toolMaterial, attackDamage, attackSpeed).setId(makeId(id)))), id);
             case PICKAXE -> registerItem(() -> new Item(itemProperties.apply(new Item.Properties().pickaxe(toolMaterial, attackDamage, attackSpeed).setId(makeId(id)))), id);
