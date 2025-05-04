@@ -17,14 +17,14 @@ public class HistoricalData<T> implements List<T> {
     public HistoricalData(T initialValue, int maxHistory) {
         if (maxHistory < 2) throw new IllegalArgumentException("Max History cannot be less than 2");
         this.maxHistory = maxHistory;
-        this.history = new ArrayList<>();
+        this.history = new ArrayList<>(maxHistory);
         this.history.add(initialValue);
     }
 
     public HistoricalData(int maxHistory) {
         if (maxHistory < 2) throw new IllegalArgumentException("Max History cannot be less than 2");
         this.maxHistory = maxHistory;
-        this.history = new ArrayList<>();
+        this.history = new ArrayList<>(maxHistory);
     }
 
     @Override
