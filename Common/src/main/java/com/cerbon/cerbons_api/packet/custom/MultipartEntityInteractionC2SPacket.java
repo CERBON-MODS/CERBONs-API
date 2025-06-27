@@ -54,7 +54,7 @@ public class MultipartEntityInteractionC2SPacket {
         ServerPlayer serverPlayer = ctx.sender();
         MultipartEntityInteractionC2SPacket packet = ctx.message();
 
-        ServerLevel serverLevel = serverPlayer.serverLevel();
+        ServerLevel serverLevel = serverPlayer.level();
 
         serverPlayer.setShiftKeyDown(packet.isSneaking);
         Entity entity = serverLevel.getEntity(packet.entityId);

@@ -1,9 +1,9 @@
 package com.cerbon.cerbons_api.fabric.cardinalComponents;
 
 import com.cerbon.cerbons_api.api.general.event.EventScheduler;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.ladysnake.cca.api.v3.component.tick.ClientTickingComponent;
 import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 
@@ -28,12 +28,12 @@ public class LevelEventScheduler implements ILevelEventSchedulerComponent, Serve
     }
 
     @Override
-    public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
+    public void readData(ValueInput readView) {
         // NO-OP
     }
 
     @Override
-    public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
+    public void writeData(ValueOutput writeView) {
         // NO-OP
     }
 }

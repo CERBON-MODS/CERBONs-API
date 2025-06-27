@@ -64,7 +64,7 @@ public class ForgeNetworkHandler extends PacketRegistrationHandler {
             var channel = message.channel();
             Connection connection = player.connection.getConnection();
             if (ignoreCheck || channel.isRemotePresent(connection)) {
-                FriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), player.server.registryAccess());
+                FriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), player.getServer().registryAccess());
                 message.container.codec().encode(buf, packet);
                 channel.send(buf, connection);
             }

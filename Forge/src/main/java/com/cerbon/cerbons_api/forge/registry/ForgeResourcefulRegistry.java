@@ -4,7 +4,7 @@ import com.cerbon.cerbons_api.api.registry.RegistryEntries;
 import com.cerbon.cerbons_api.api.registry.RegistryEntry;
 import com.cerbon.cerbons_api.api.registry.ResourcefulRegistry;
 import net.minecraft.core.Registry;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -31,7 +31,7 @@ public class ForgeResourcefulRegistry<T> implements ResourcefulRegistry<T> {
 
     @Override
     public void register() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        BusGroup bus = FMLJavaModLoadingContext.get().getModBusGroup();
         register.register(bus);
     }
 }

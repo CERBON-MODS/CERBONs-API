@@ -39,7 +39,7 @@ public class FabricNetworkHandler extends PacketRegistrationHandler {
 
         Constants.LOGGER.info("Registering packet {} : {} on the: {}", container.type().id(), container.classType(), Side.SERVER);
         ServerPlayNetworking.registerGlobalReceiver(container.getType(),
-                (ServerPlayNetworking.PlayPayloadHandler<CommonPacketWrapper<T>>) (payload, context) -> context.player().server.execute(() ->
+                (ServerPlayNetworking.PlayPayloadHandler<CommonPacketWrapper<T>>) (payload, context) -> context.player().getServer().execute(() ->
                         container.handler().accept(
                                 new PacketContext<>(context.player(), payload.packet(), Side.SERVER))));
 
